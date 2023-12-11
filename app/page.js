@@ -20,7 +20,7 @@ const useUserPosition = () => {
   };
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof navigator === 'undefined') {
       return;
     }
 
