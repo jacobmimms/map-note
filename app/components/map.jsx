@@ -45,7 +45,6 @@ export default function Page() {
     if (!position) return (
         <div className=' flex items-center justify-center w-[100vw] h-[80vh] bg-slate-700'>   <Loading /></div>
     );
-    console.log(position)
     return (
         <>
             <MapContainer className={'w-[100vw] h-[80vh]'} center={position} zoom={13} scrollWheelZoom={false}>

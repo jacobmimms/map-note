@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from "react";
 
 export default function Upload() {
@@ -7,11 +8,9 @@ export default function Upload() {
     const [success, setSuccess] = useState(false);
     const [failure, setFailure] = useState(false);
     const [text, setText] = useState('');
+    const [isMobile, setIsMobile] = useState(false);
 
 
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
 
     useEffect(() => {
         if ('geolocation' in navigator) {
@@ -20,6 +19,7 @@ export default function Upload() {
                 setLocation({ latitude: latitude, longitude: longitude });
             })
         }
+        setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     }, [location]);
 
     function renameFile(originalFile, newName) {
@@ -93,7 +93,7 @@ export default function Upload() {
                     accept="image/png, image/jpeg"
                     style={{ display: 'none' }}
                 />
-                {isMobile() && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
+                {isMobile && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
                     Take a picture
                     <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }}></input>
                 </label></>}
