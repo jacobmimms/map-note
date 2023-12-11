@@ -17,18 +17,20 @@ const useUserPosition = () => {
     setError(err.message);
   };
 
-
-
   useEffect(() => {
     let isMounted = true;
     let watchId;
 
-    if (navigator && 'geolocation' in navigator) {
-      const geo = navigator.geolocation;
-      watchId = geo.watchPosition(onSuccess, onError);
-    } else {
-      setError('Geolocation is not supported');
-    }
+    const getUserLocation = () => {
+      if (isMounted && navigator && 'geolocation' in navigator) {
+        const geo = navigator.geolocation;
+        watchId = geo.watchPosition(onSuccess, onError);
+      } else {
+        setError('Geolocation is not supported');
+      }
+    };
+
+    getUserLocation(); // Initial check
 
     return () => {
       isMounted = false;
