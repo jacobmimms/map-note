@@ -22,7 +22,7 @@ const useUserPosition = () => {
     let watchId;
 
     const getUserLocation = () => {
-      if (isMounted && navigator && 'geolocation' in navigator) {
+      if (isMounted && 'geolocation' in navigator) {
         const geo = navigator.geolocation;
         watchId = geo.watchPosition(onSuccess, onError);
       } else {
@@ -30,10 +30,18 @@ const useUserPosition = () => {
       }
     };
 
-    getUserLocation(); // Initial check
+    const checkNavigator = () => {
+      if (window && 'navigator' in window) {
+        clearInterval(checkInterval);
+        getUserLocation();
+      }
+    };
+
+    let checkInterval = setInterval(checkNavigator, 1000); // Check every second
 
     return () => {
       isMounted = false;
+      clearInterval(checkInterval);
       if (watchId) {
         navigator.geolocation.clearWatch(watchId);
       }
