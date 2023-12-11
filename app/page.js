@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import Upload from './components/upload';
 import dynamic from 'next/dynamic';
@@ -8,7 +7,9 @@ import Loading from './components/loading';
 const useUserPosition = () => {
   const [position, setPosition] = useState(null);
   const [error, setError] = useState(null);
-  const windowExists = typeof window !== 'undefined';
+
+
+
   const onSuccess = ({ coords }) => {
     const { latitude, longitude } = coords;
     setPosition([latitude, longitude]);
@@ -19,11 +20,12 @@ const useUserPosition = () => {
   };
 
   useEffect(() => {
-    let isMounted = true;
-    let watchId;
-    if (!windowExists) {
+    if (typeof window === 'undefined') {
       return;
     }
+
+    let isMounted = true;
+    let watchId;
     if ('geolocation' in navigator) {
       const geo = navigator.geolocation;
       watchId = geo.watchPosition(onSuccess, onError);
