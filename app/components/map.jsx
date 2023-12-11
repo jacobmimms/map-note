@@ -4,42 +4,8 @@ import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
 import { useMap } from 'react-leaflet/hooks'
 import { Marker } from 'react-leaflet/Marker'
-
-
-const useUserPosition = () => {
-    const [position, setPosition] = useState(null);
-    const [error, setError] = useState(null);
-
-    const onSuccess = ({ coords }) => {
-        const { latitude, longitude } = coords;
-        setPosition([latitude, longitude]);
-    };
-
-    const onError = (err) => {
-        setError(err.message);
-    };
-
-    useEffect(() => {
-        let isMounted = true;
-        let watchId;
-
-        if ('geolocation' in navigator) {
-            const geo = navigator.geolocation;
-            watchId = geo.watchPosition(onSuccess, onError);
-        } else {
-            setError('Geolocation is not supported');
-        }
-
-        return () => {
-            isMounted = false;
-            if (watchId) {
-                navigator.geolocation.clearWatch(watchId);
-            }
-        };
-    }, []);
-
-    return { position, error };
-};
+import useGeolocation from "react-hook-geolocation";
+import Loading from './loading'
 
 function RecenterAutomatically() {
     const map = useMap();
@@ -68,15 +34,28 @@ function LocationMarker({ position }) {
     )
 
 }
-export default function Page({ position }) {
+export default function Page() {
+    const [position, setPosition] = useState(null);
+    const geolocation = useGeolocation();
+    useEffect(() => {
+        if (!geolocation.latitude) return;
+        setPosition([geolocation.latitude, geolocation.longitude]);
+    }, [geolocation]);
+
+    if (!position) return (
+        <div className=' flex items-center justify-center w-[100vw] h-[80vh] bg-slate-700'>   <Loading /></div>
+    );
+    console.log(position)
     return (
-        <MapContainer className={'w-[100vw] h-[80vh]'} center={position} zoom={13} scrollWheelZoom={false}>
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <RecenterAutomatically />
-            <LocationMarker position={position} />
-        </MapContainer>
+        <>
+            <MapContainer className={'w-[100vw] h-[80vh]'} center={position} zoom={13} scrollWheelZoom={false}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <RecenterAutomatically />
+                <LocationMarker position={position} />
+            </MapContainer>
+        </>
     );
 }
