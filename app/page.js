@@ -17,11 +17,13 @@ const useUserPosition = () => {
     setError(err.message);
   };
 
+
+
   useEffect(() => {
     let isMounted = true;
     let watchId;
 
-    if ('geolocation' in navigator) {
+    if (navigator && 'geolocation' in navigator) {
       const geo = navigator.geolocation;
       watchId = geo.watchPosition(onSuccess, onError);
     } else {
@@ -53,8 +55,7 @@ const Page = () => {
         {position ?
           <DynamicMap position={position} /> :
           <div className='flex items-center justify-center w-full h-full bg-slate-500'>
-          <Loading  className='purple-500'/>
-
+            <Loading />
           </div>
         }
       </main>
