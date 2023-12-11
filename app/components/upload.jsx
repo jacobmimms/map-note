@@ -14,7 +14,6 @@ export default function Upload() {
     }
 
     useEffect(() => {
-
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(({ coords }) => {
                 const { latitude, longitude } = coords;
@@ -37,7 +36,10 @@ export default function Upload() {
             return
         }
         setUploading(true)
-
+        var file = renameFile(
+            file,
+            `${location.latitude}${location.longitude}.jpg`
+        )
         const response = await fetch('/api/upload',
             {
                 method: 'POST',
@@ -68,26 +70,14 @@ export default function Upload() {
         } else {
             alert('Failed to get pre-signed URL.')
         }
-
         setUploading(false)
     }
-    if (success) {
-        return (
-            <div className="bg-red-500 rounded-lg flex flex-col w-auto p-2'">
-                <h1>Success!</h1>
-            </div>
-        )
-    }
-    if (failure) {
-        return (
-            <div>
-                <h1>Failure!</h1>
-            </div>
-        )
-    }
-    else return (
+    return (
         <form className='bg-red-500 rounded-lg flex flex-col  w-auto p-2' onSubmit={handleSubmit}>
             <div>
+                <label className='bg-blue-500 rounded-lg p-2' htmlFor="file">
+                    {file ? 'Select a new file' : 'Select a file'}
+                </label>
                 <input
                     className='bg-blue-500 rounded-lg'
                     id="file"
@@ -96,19 +86,22 @@ export default function Upload() {
                         const files = e.target.files
 
                         if (files) {
-                            var new_file = renameFile(
-                                files[0],
-                                `${location.latitude}-${location.longitude}.jpg`
-                            )
-                            setFile(new_file)
+
+                            setFile(files[0])
                         }
                     }}
                     accept="image/png, image/jpeg"
+                    style={{ display: 'none' }}
                 />
-                <input id='camera-pic' type="file" accept="image/*" capture="camera"></input>
+                {isMobile() && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
+                    Take a picture
+                    <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }}></input>
+                </label></>}
 
             </div>
-
+            <span>
+                {file && file.name}
+            </span>
             <input
                 className='bg-blue-500 rounded-lg mt-2 p-2'
                 type='text'
