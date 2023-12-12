@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
-
+// valerie dubinard
 export default function Upload() {
     const [file, setFile] = useState(null)
     const [uploading, setUploading] = useState(false)
@@ -19,13 +19,6 @@ export default function Upload() {
         }
         setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     }, [location]);
-
-    function renameFile(originalFile, newName) {
-        return new File([originalFile], newName, {
-            type: originalFile.type,
-            lastModified: originalFile.lastModified,
-        });
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -87,18 +80,11 @@ export default function Upload() {
         setUploading(false)
     }
 
-    async function logAllPosts() {
-        let res = await fetch('/api/posts', { method: 'GET' })
-        console.log(res)
-        let data = await res.json()
-        console.log(data)
-    }
-
     return (
         <>
-            <form className='bg-red-500 rounded-lg flex flex-col w-full p-2 h-full' onSubmit={handleSubmit}>
-                <div>
-                    <label className='bg-blue-500 rounded-lg p-2' htmlFor="file">
+            <form className='flex flex-col w-full h-full' onSubmit={handleSubmit}>
+                <div className="bg-red-500 w-full h-full p-1">
+                    <label className='bg-blue-500 rounded-md p-1' htmlFor="file">
                         {file ? 'Select a new file' : 'Select a file'}
                     </label>
                     <input
@@ -117,7 +103,13 @@ export default function Upload() {
                     />
                     {isMobile && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
                         Take a picture
-                        <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }}></input>
+                        <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }} onChange={async (e) => {
+                            const files = e.target.files
+                            if (files) {
+                                setFile(files[0])
+                                console.log(files[0])
+                            }
+                        }}></input>
                     </label></>}
 
                 </div>
@@ -141,9 +133,6 @@ export default function Upload() {
                     Upload
                 </button>
             </form>
-            <button onClick={logAllPosts}>
-                log all posts
-            </button>
         </>
     )
 }
