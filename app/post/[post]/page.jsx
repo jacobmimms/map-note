@@ -1,18 +1,12 @@
 import Image from 'next/image'
 const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
+import { sql } from '@vercel/postgres';
+
+
 export async function generateStaticParams() {
-    // set dev endpoint to localhost:3000/api/posts and prod endpoint to map-note.vercel.app/api/posts
-
-    const apiEndpoint =
-        process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000/api/posts'
-            : 'https://map-note.vercel.app/api/posts'
-
-
-    const posts = await fetch(apiEndpoint, { method: 'GET' })
-    const postsJson = await posts.json()
-    return postsJson.map((post) => ({
+    const { rows } = await sql`SELECT * from posts`;
+    return rows.map((post) => ({
         post: post.id,
     }))
 }
