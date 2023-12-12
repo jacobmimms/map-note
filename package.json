@@ -12,6 +12,7 @@
     "@aws-sdk/s3-presigned-post": "^3.470.0",
     "@aws-sdk/s3-request-presigner": "^3.470.0",
     "@aws-sdk/signature-v4": "^3.374.0",
+    "@vercel/postgres": "^0.5.1",
     "aws-sdk": "^2.1515.0",
     "exif-js": "^2.3.0",
     "exifr": "^7.1.3",

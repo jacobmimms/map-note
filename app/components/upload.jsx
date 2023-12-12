@@ -10,8 +10,6 @@ export default function Upload() {
     const [text, setText] = useState('');
     const [isMobile, setIsMobile] = useState(false);
 
-
-
     useEffect(() => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(({ coords }) => {
@@ -31,15 +29,12 @@ export default function Upload() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        console.log(file)
         if (!file) {
             alert('Please select a file to upload.')
             return
         }
         setUploading(true)
-        var file = renameFile(
-            file,
-            `${location.latitude}${location.longitude}.jpg`
-        )
         const response = await fetch('/api/upload',
             {
                 method: 'POST',
@@ -70,54 +65,85 @@ export default function Upload() {
         } else {
             alert('Failed to get pre-signed URL.')
         }
+
+        // upload to sql database
+        const { latitude, longitude } = location;
+        const timestamp = new Date().toISOString();
+        const id = file.name;
+        const description = text;
+        const post = { id, description, latitude, longitude, timestamp };
+        const postResponse = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(post),
+        });
+        if (postResponse.ok) {
+            console.log('Post uploaded to database.');
+        } else {
+            console.error('Post upload error:', postResponse);
+        }
         setUploading(false)
     }
+
+    async function logAllPosts() {
+        let res = await fetch('/api/posts', { method: 'GET' })
+        console.log(res)
+        let data = await res.json()
+        console.log(data)
+    }
+
     return (
-        <form className='bg-red-500 rounded-lg flex flex-col  w-auto p-2' onSubmit={handleSubmit}>
-            <div>
-                <label className='bg-blue-500 rounded-lg p-2' htmlFor="file">
-                    {file ? 'Select a new file' : 'Select a file'}
-                </label>
+        <>
+            <form className='bg-red-500 rounded-lg flex flex-col w-full p-2 h-full' onSubmit={handleSubmit}>
+                <div>
+                    <label className='bg-blue-500 rounded-lg p-2' htmlFor="file">
+                        {file ? 'Select a new file' : 'Select a file'}
+                    </label>
+                    <input
+                        className='bg-blue-500 rounded-lg'
+                        id="file"
+                        type="file"
+                        onChange={async (e) => {
+                            const files = e.target.files
+                            if (files) {
+                                setFile(files[0])
+                                console.log(files[0])
+                            }
+                        }}
+                        accept="image/png, image/jpeg"
+                        style={{ display: 'none' }}
+                    />
+                    {isMobile && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
+                        Take a picture
+                        <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }}></input>
+                    </label></>}
+
+                </div>
+                <span>
+                    {file && file.name}
+                </span>
                 <input
-                    className='bg-blue-500 rounded-lg'
-                    id="file"
-                    type="file"
-                    onChange={async (e) => {
-                        const files = e.target.files
-
-                        if (files) {
-
-                            setFile(files[0])
+                    className='bg-blue-500 rounded-lg mt-2 p-2'
+                    type='text'
+                    id='description'
+                    placeholder='Write your thoughts here!'
+                    onChange={
+                        (e) => {
+                            setText(e.target.value)
                         }
-                    }}
-                    accept="image/png, image/jpeg"
-                    style={{ display: 'none' }}
-                />
-                {isMobile && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
-                    Take a picture
-                    <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }}></input>
-                </label></>}
-
-            </div>
-            <span>
-                {file && file.name}
-            </span>
-            <input
-                className='bg-blue-500 rounded-lg mt-2 p-2'
-                type='text'
-                id='description'
-                placeholder='Write your thoughts here!'
-                onChange={
-                    (e) => {
-                        setText(e.target.value)
                     }
-                }
-            >
-            </input>
+                >
+                </input>
 
-            <button className=' block bg-green-500 rounded-full hover:cursor-pointer min-w-fit w-auto p-2 mt-2' type="submit" disabled={uploading}>
-                Upload
+                <button className=' block bg-green-500 rounded-full hover:cursor-pointer min-w-fit w-auto p-2 mt-2' type="submit" disabled={uploading}>
+                    Upload
+                </button>
+            </form>
+            <button onClick={logAllPosts}>
+                log all posts
             </button>
-        </form>
+        </>
     )
 }
