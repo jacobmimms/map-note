@@ -1,5 +1,4 @@
 import Image from 'next/image'
-const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
 import { sql } from '@vercel/postgres';
 
@@ -10,6 +9,7 @@ export async function generateStaticParams() {
         post: post.id,
     }))
 }
+const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
 function encodeS3Key(key) {
     try {
@@ -38,8 +38,8 @@ export default function Page({ params }) {
     let srcUrl = `${url}${encodeS3Key(decodeS3Key(post))}.jpg`
 
     return (
-        <div className="bg-green-500 w-full h-full">
-            <h1 className="bg-red-500">{post}</h1>
+        <div className="bg-slate600 w-full h-full">
+            <h1 className="bg-slate-500">{post}</h1>
             <Image width={300} height={300} src={srcUrl} alt='pop up image' />
         </div>
     )

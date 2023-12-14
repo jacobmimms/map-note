@@ -33,8 +33,13 @@ body {
 }
 
 #map {
-  height: 180px;
+  height: 50vh;
 }
+
+
+.leaflet-control { z-index: 0 !important}
+.leaflet-pane { z-index: 0 !important}
+.leaflet-top, .leaflet-bottom {z-index: 0 !important}
 
 .container {
   --uib-size: 55px;

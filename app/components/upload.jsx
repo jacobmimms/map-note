@@ -82,9 +82,9 @@ export default function Upload() {
 
     return (
         <>
-            <form className='flex flex-col w-full h-full' onSubmit={handleSubmit}>
-                <div className="bg-red-500 w-full h-full p-1">
-                    <label className='bg-blue-500 rounded-md p-1' htmlFor="file">
+            <form className='flex flex-col justify-center items-start w-full h-full p-2' onSubmit={handleSubmit}>
+                <div className="flex flex-row items-center justify-center w-full h-full p-1">
+                    <label className='bg-slate-200 rounded-md p-1 text-slate-800 hover:cursor-pointer' htmlFor="file">
                         {file ? 'Select a new file' : 'Select a file'}
                     </label>
                     <input
@@ -101,7 +101,7 @@ export default function Upload() {
                         accept="image/png, image/jpeg"
                         style={{ display: 'none' }}
                     />
-                    {isMobile && <><label className='bg-blue-500 rounded-lg p-2' htmlFor="camera-pic">
+                    {isMobile && <><span>&nbsp; or &nbsp; </span><label className='bg-slate-200 rounded-md p-1 text-slate-800 hover:cursor-pointer' htmlFor="camera-pic">
                         Take a picture
                         <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }} onChange={async (e) => {
                             const files = e.target.files
@@ -116,8 +116,8 @@ export default function Upload() {
                 <span>
                     {file && file.name}
                 </span>
-                <input
-                    className='bg-blue-500 rounded-lg mt-2 p-2'
+                <textarea
+                    className='bg-slate-200 text-slate-800 h-full w-full rounded-lg mt-2 p-2'
                     type='text'
                     id='description'
                     placeholder='Write your thoughts here!'
@@ -127,9 +127,9 @@ export default function Upload() {
                         }
                     }
                 >
-                </input>
+                </textarea>
 
-                <button className=' block bg-green-500 rounded-full hover:cursor-pointer min-w-fit w-auto p-2 mt-2' type="submit" disabled={uploading}>
+                <button className='block bg-slate-500 text-slate-300 rounded-md hover:cursor-pointer min-w-fit w-auto px-4 py-2 mt-2' type="submit" disabled={uploading}>
                     Upload
                 </button>
             </form>

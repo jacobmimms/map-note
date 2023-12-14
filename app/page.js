@@ -1,7 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Upload from './components/upload';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
 const url = 'https://mimms-pictures.s3.amazonaws.com/'
@@ -16,18 +14,6 @@ function encodeS3Key(key) {
     return null;
   }
 }
-function decodeS3Key(key) {
-  try {
-    // Decode the key and replace '+' with spaces
-    const decodedKey = decodeURIComponent(key).replace(/\+/g, ' ');
-    return decodedKey;
-  } catch (error) {
-    console.error('Error decoding S3 key:', error);
-    return null;
-  }
-}
-
-
 
 const Page = () => {
   const [posts, setPosts] = useState([]);
@@ -39,25 +25,17 @@ const Page = () => {
   }, []);
 
 
-
-
   return (
     <>
-      <section className='w-full h-[10%] bg-green-500 flex flex-row items-center justify-center'>
-        PICTURES!
-        <a href='/explore' className='p-2 bg-purple-500 '>
-          Explore
-        </a>
-      </section>
-      <main className='w-full h-full'>
+      <main className='overflow-scroll'>
         <div className='flex flex-wrap justify-center'>
           {posts.map(post => (
             <div key={post.id} className='w-1/3 p-2'>
-              <div className='bg-white rounded-lg shadow-lg'>
+              <div className='bg-slate-200 rounded-lg shadow-lg'>
                 <div className='flex justify-center'>
                   <Image
                     className='w-full h-64 object-cover'
-                    src={`${url}${encodeS3Key(decodeS3Key(post.id))}`}
+                    src={`${url}${encodeS3Key(post.id)}`}
                     alt={post.title}
                     width={300}
                     height={300}
@@ -81,7 +59,6 @@ const Page = () => {
             </div>
           ))}
         </div>
-
       </main>
     </>
   );
