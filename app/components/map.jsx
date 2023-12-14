@@ -8,19 +8,6 @@ import useGeolocation from "react-hook-geolocation"
 import Loading from './loading'
 import Markers from './markers'
 
-// function RecenterAutomatically() {
-//     const map = useMap();
-//     useEffect(() => {
-//         if ('geolocation' in navigator) {
-//             navigator.geolocation.getCurrentPosition(({ coords }) => {
-//                 const { latitude, longitude } = coords;
-//                 console.log(latitude, longitude)
-//                 map.setView([latitude, longitude]);
-//             })
-//         }
-//     }, []);
-//     return null;
-// }
 
 function LocationMarker() {
     const [position, setPosition] = useState(null);
@@ -50,8 +37,13 @@ export default function Page() {
     useEffect(() => {
         if (!geolocation.latitude) return;
 
-        setPosition([geolocation.latitude, geolocation.longitude]);
-    }, [geolocation]);
+        const newPosition = [geolocation.latitude, geolocation.longitude];
+
+        // Only update position if the change is significant (e.g., more than 0.001 degrees)
+        if (!position || Math.abs(newPosition[0] - position[0]) > 0.001 || Math.abs(newPosition[1] - position[1]) > 0.001) {
+            setPosition(newPosition);
+        }
+    }, [geolocation, position]);
 
     if (!position) return (
         <div className={`flex items-center justify-center w-full h-full  bg-slate-700`}>  <Loading /></div>
@@ -64,7 +56,6 @@ export default function Page() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/* <RecenterAutomatically /> */}
                 <LocationMarker/>
                 <Markers />
             </MapContainer>

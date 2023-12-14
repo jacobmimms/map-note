@@ -36,7 +36,7 @@ function decodeS3Key(key) {
 export default function Page({ params }) {
     const { post } = params
     let srcUrl = `${url}${encodeS3Key(decodeS3Key(post))}.jpg`
-
+    
     return (
         <div className="bg-slate600 w-full h-full">
             <h1 className="bg-slate-500">{post}</h1>
