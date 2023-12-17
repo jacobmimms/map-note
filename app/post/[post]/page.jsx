@@ -4,7 +4,7 @@ import { sql } from '@vercel/postgres';
 
 
 export async function generateStaticParams() {
-    const { rows } = await sql`SELECT * from posts`;
+    const { rows } = await sql`SELECT * from post_db`;
     return rows.map((post) => ({
         post: post.id,
     }))
@@ -35,12 +35,15 @@ function decodeS3Key(key) {
 
 export default function Page({ params }) {
     const { post } = params
-    let srcUrl = `${url}${encodeS3Key(decodeS3Key(post))}.jpg`
-    
+    let srcUrl = `${url}${encodeS3Key(decodeS3Key(post))}`
+    console.log(post)
     return (
-        <div className="bg-slate600 w-full h-full">
-            <h1 className="bg-slate-500">{post}</h1>
-            <Image width={300} height={300} src={srcUrl} alt='pop up image' />
+        <div className="bg-gray-800 min-h-screen flex flex-col items-center justify-center text-white">
+            <div className="bg-gray-700 p-4 rounded shadow-lg">
+                <Image width={300} height={300} src={srcUrl} alt='pop up image' className="rounded" />
+            </div>
+            <span className="text-4xl mb-4 bg-gray-700 p-2 rounded">{post.description}</span>
+
         </div>
     )
 }
