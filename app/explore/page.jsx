@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 import UploadComponent from '../components/upload/uploadComponent';
 
-
 const DynamicMap = dynamic(() => import('../components/map/mapComponent'), {
     ssr: false, // This ensures no server-side rendering for this component
 });

@@ -1,7 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
-
 export async function GET(request) {
     try {
         const { rows } = await sql`SELECT * FROM post_db`;
@@ -12,7 +11,6 @@ export async function GET(request) {
         return NextResponse.error(error);
     }
 }
-
 
 
 export async function POST(request) {
@@ -40,20 +38,7 @@ export async function POST(request) {
             return NextResponse.json(rows);
         }
 
-        // if the post_db table doesn't exist, create it
-        const result =
-            await sql`CREATE TABLE IF NOT EXISTS post_db (
-        id TEXT PRIMARY KEY,
-        description TEXT,
-        latitude NUMERIC,
-        longitude NUMERIC,
-        timestamp TIMESTAMP
-        )`;
-
-
-
-        // insert the post into the table
-        await sql`INSERT INTO post_db (id, description, latitude, longitude, timestamp) VALUES (${id}, ${description}, ${latitude}, ${longitude}, ${timestamp})`;
+        const result = await sql`INSERT INTO post_db (id, description, latitude, longitude, timestamp) VALUES (${id}, ${description}, ${latitude}, ${longitude}, ${timestamp})`;
 
         return NextResponse.json(result);
     } catch (error) {
