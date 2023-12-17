@@ -32,10 +32,8 @@ function DeleteButton() {
 
 export default function UploadWrap() {
     const [shelfOpen, setShelfOpen] = useState(false);
-    const [uploading, setUploading] = useState(false)
     const [success, setSuccess] = useState(false);
     const [failure, setFailure] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
     const location = useLocation();
 
     const [uploadData, setUploadData] = useState({
@@ -44,7 +42,6 @@ export default function UploadWrap() {
     });
 
     useEffect(() => {
-        console.log(uploadData, 'uploadData')
         if (success) {
             setUploadData({
                 file: null,

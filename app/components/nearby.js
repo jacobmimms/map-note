@@ -1,18 +1,9 @@
 import Image from 'next/image';
 import Loading from './animations/loading';
 import { sql } from '@vercel/postgres';
-const url = 'https://mimms-pictures.s3.amazonaws.com/'
+import { encodeS3Key, BUCKET_URL } from '@/app/utils/main';
 
-function encodeS3Key(key) {
-    try {
-        // Encode the key and replace spaces with '+'
-        const encodedKey = encodeURIComponent(key).replace(/%20/g, '+');
-        return encodedKey;
-    } catch (error) {
-        console.error('Error encoding S3 key:', error);
-        return null;
-    }
-}
+
 
 async function getPosts() {
     const posts = await sql`SELECT * from post_db`;
@@ -39,7 +30,7 @@ async function Nearby() {
                     <p>{post.description}</p>
                     <Image
                         className='w-full h-64 object-cover'
-                        src={`${url}${encodeS3Key(post.id)}`}
+                        src={`${BUCKET_URL}${encodeS3Key(post.id)}`}
                         alt={`${post.description ? post.description : 'Post'}`}
                         width={300}
                         height={300}

@@ -1,14 +1,8 @@
-import { Marker, Popup } from 'react-leaflet'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { encodeS3Key, BUCKET_URL } from '@/app/utils/main'
+import PopupMarker from './popupMarker'
 
-const icon_ = L.icon({
-    iconUrl: './marker.png',
-    iconSize: [40, 40],
 
-});
-
-const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
 export default function Markers() {
     const [posts, setPosts] = useState([])
@@ -22,30 +16,20 @@ export default function Markers() {
         getPosts()
     }, [])
 
-    function encodeS3Key(key) {
-        try {
-            // Encode the key and replace spaces with '+'
-            const encodedKey = encodeURIComponent(key).replace(/%20/g, '+');
-            return encodedKey;
-        } catch (error) {
-            console.error('Error encoding S3 key:', error);
-            return null;
-        }
-    }
 
     return (
         <>
             {posts.map((post) => {
                 return (
-                    <Marker key={post.id} position={[post.latitude, post.longitude]} icon={icon_}>
-                        <Popup position={[post.latitude, post.longitude]}>
-                            <div className='flex flex-col'>
-                                <Image src={`${url}${encodeS3Key(post.id)}`} width={100} height={100} alt='pop up image' />
-                                <span>{post.description}</span>
-                                <a href={`post/${encodeS3Key(post.id)}`}>View Post</a>
-                            </div>
-                        </Popup>
-                    </Marker>
+                    <PopupMarker
+                        key={post.id}
+                        id={post.id}
+                        position={[post.latitude, post.longitude]}
+                        imageSrc={`${BUCKET_URL}${encodeS3Key(post.id)}`}
+                        description={post.description}
+                        link={`post/${encodeS3Key(post.id)}`}
+                        linkText='View Post'
+                    />
                 )
             })}
         </>
