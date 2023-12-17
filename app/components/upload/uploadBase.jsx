@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import Loading from '../animations/loading';
+
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
     const timestamp = new Date().toISOString();
@@ -22,18 +23,12 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     }
 }
 
-
 export default function UploadBase({ location, uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-        // set the file and text to the uploadData when the component mounts
-        // find the text div and set the text to the uploadData.text
-        // find the file div and set the file to the uploadData.file
-        const text = document.getElementById('description');
-        text.value = uploadData.text;
     }, []);
 
     const handleSubmit = async (e) => {
@@ -42,44 +37,46 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
             alert('Please select a file to upload.')
             return
         }
-        const id = `${Date.now()}${uploadData.file.name}`;
-        setUploading(true)
-        const response = await fetch('/api/upload',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ filename: id, contentType: uploadData.file.type }),
+        try {
+            const id = `${Date.now()}${uploadData.file.name}`;
+            setUploading(true)
+            const response = await fetch('/api/upload',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filename: id, contentType: uploadData.file.type }),
+                }
+            )
+            if (response.ok) {
+                console.log('S3 Upload Success:', response)
+                const { url, fields } = await response.json()
+                const formData = new FormData()
+                Object.entries({ ...fields, file }).forEach(([key, value]) => {
+                    console.log(key, value)
+                    formData.append(key, value)
+                })
+                formData.delete('file')
+                formData.append('file', uploadData.file)
+
+                const uploadResponse = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                })
+                if (!uploadResponse.ok) {
+                    console.error('S3 Upload Error:', uploadResponse)
+                    setFailure(true)
+                }
+
+                updateSqlDatabase(location, uploadData.text, id, setSuccess, setFailure);
+
+            } else {
+                alert('Failed to get pre-signed URL.')
             }
-        )
-        if (response.ok) {
-            console.log('S3 Upload Success:', response)
-            const { url, fields } = await response.json()
-            const formData = new FormData()
-            Object.entries({ ...fields, file }).forEach(([key, value]) => {
-                console.log(key, value)
-                formData.append(key, value)
-            })
-            formData.delete('file')
-            formData.append('file', uploadData.file)
-            console.log(formData)
-            console.log(uploadData.file)
-
-            const uploadResponse = await fetch(url, {
-                method: 'POST',
-                body: formData,
-            })
-            console.log('S3 Upload Response:', uploadResponse)
-            if (!uploadResponse.ok) {
-                console.error('S3 Upload Error:', uploadResponse)
-                setFailure(true)
-            }
-
-            updateSqlDatabase(location, uploadData.text, id, setSuccess, setFailure);
-
-        } else {
-            alert('Failed to get pre-signed URL.')
+        } catch (error) {
+            console.error(error)
+            setFailure(true)
         }
         setUploading(false)
         toggleShelf()
@@ -87,7 +84,7 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
 
     async function setFile(e) {
         const files = e.target.files
-        if (files) {
+        if (files && files[0]) {
             console.log(files[0])
             setUploadData({ ...uploadData, file: files[0] })
         }
@@ -101,16 +98,15 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
                         {uploadData.file ? 'Select a new file' : 'Select a file'}
                     </label>
                     <input
-                        className='bg-blue-500 rounded-lg'
+                        className='bg-blue-500 rounded-lg hidden'
                         id="file"
                         type="file"
                         onChange={setFile}
                         accept="image/png, image/jpeg"
-                        style={{ display: 'none' }}
                     />
                     {isMobile && <><span>&nbsp; or &nbsp; </span><label className='bg-slate-200 rounded-md p-1 text-slate-800 hover:cursor-pointer' htmlFor="camera-pic">
                         Take a picture
-                        <input id='camera-pic' type="file" accept="image/*" capture="camera" style={{ display: 'none' }} onChange={setFile}></input>
+                        <input id='camera-pic' type="file" accept="image/*" capture="camera" className="hidden" onChange={setFile}></input>
                     </label></>}
 
                 </div>
@@ -127,6 +123,7 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
                             setUploadData({ ...uploadData, text: e.target.value })
                         }
                     }
+                    value={uploadData.text}
                 >
                 </textarea>
 

@@ -15,9 +15,6 @@ function encodeS3Key(key) {
 }
 
 async function getPosts() {
-    // const posts = await sql`DROP TABLE IF EXISTS posts`;
-    // await new Promise(resolve => setTimeout(resolve, 1000));
-
     const posts = await sql`SELECT * from post_db`;
     if (!posts) {
         return null;
@@ -34,25 +31,22 @@ async function Nearby() {
             </div>
         )
     }
-    if (posts) {
-        return (
-            <div>
-                {posts.map((post) => (
-                    <div key={post.id}>
-                        <h2>{post.id}</h2>
-                        <p>{post.description}</p>
-                        <Image
-                            className='w-full h-64 object-cover'
-                            src={`${url}${encodeS3Key(post.id)}`}
-                            alt={`${post.description ? post.description : 'Post'}`}
-                            width={300}
-                            height={300}
-                        />
-                    </div>
-                ))}
-            </div>)
-    }
-    return null
+    return (
+        <div>
+            {posts.map((post) => (
+                <div key={post.id}>
+                    <h2>{post.id}</h2>
+                    <p>{post.description}</p>
+                    <Image
+                        className='w-full h-64 object-cover'
+                        src={`${url}${encodeS3Key(post.id)}`}
+                        alt={`${post.description ? post.description : 'Post'}`}
+                        width={300}
+                        height={300}
+                    />
+                </div>
+            ))}
+        </div>)
 }
 
 export default Nearby;

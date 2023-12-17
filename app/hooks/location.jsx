@@ -27,8 +27,6 @@ export const LocationProvider = ({ children }) => {
     const [locationSet, setLocationSet] = useState(false);
 
     useEffect(() => {
-        // if (!('geolocation' in navigator)) return;
-        console.log(getDistance(location, pastLocation))
         if (getDistance(location, pastLocation) < MIN_DISTANCE) {
             return;
         }
@@ -41,7 +39,7 @@ export const LocationProvider = ({ children }) => {
             setLocation(newLocation);
             setLocationSet(true);
         });
-    }, [locationSet, pastLocation]);
+    }, [location, locationSet, pastLocation]);
 
     return (
         <LocationContext.Provider value={location}>

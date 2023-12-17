@@ -17,12 +17,14 @@ function DeleteButton() {
             body: JSON.stringify({ delete_all }),
         });
         const rows = await response.json();
-
         return rows;
     }
-
     return (
-        <button onClick={deleteALL}>
+        <button onClick={() => {
+            if (window.confirm('Are you sure you want to delete all posts?')) {
+                deleteALL();
+            }
+        }}>
             DELETE ALL
         </button>
     )
@@ -42,11 +44,12 @@ export default function UploadWrap() {
     });
 
     useEffect(() => {
+        console.log(uploadData, 'uploadData')
         if (success) {
-            // setUploadData({
-            //     file: null,
-            //     text: ''
-            // });
+            setUploadData({
+                file: null,
+                text: ''
+            });
             setTimeout(() => {
                 setSuccess(false);
             }, 3000);
@@ -56,7 +59,7 @@ export default function UploadWrap() {
                 setFailure(false);
             }, 3000);
         }
-    }, [failure, success]);
+    }, [failure, success, shelfOpen]);
 
 
     const toggleShelf = () => {
