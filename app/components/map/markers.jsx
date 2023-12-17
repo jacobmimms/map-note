@@ -42,7 +42,7 @@ export default function Markers() {
                             <div className='flex flex-col'>
                                 <Image src={`${url}${encodeS3Key(post.id)}`} width={100} height={100} alt='pop up image' />
                                 <span>{post.description}</span>
-                                <a href={`post/${encodeS3Key(post.id).slice(0, -4)}`}>View Post</a>
+                                <a href={`post/${encodeS3Key(post.id)}`}>View Post</a>
                             </div>
                         </Popup>
                     </Marker>
