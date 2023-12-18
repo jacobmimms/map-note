@@ -1,6 +1,7 @@
 'use client'
 import { Marker } from 'react-leaflet'
 import { useMemo } from 'react';
+
 export default function LocationMarker({ position }) {
     const icon = useMemo(() => L.icon({
         iconUrl: './location.png',

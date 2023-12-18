@@ -26,13 +26,14 @@ function MapUpdater({ position }) {
 
 
 function Map() {
-    let position = useLocation();
+    const position = useLocation();
+    const [mapData, setMapData] = useState()
     if (!position) return (
         <div className={`flex items-center justify-center w-full h-full  bg-slate-700`}>  <Loading /></div>
     );
 
     return (
-        <MapContainer className={`h-full w-full`} center={[0, 0]} zoom={15} scrollWheelZoom={false} tap={false}>
+        <MapContainer className={`h-full w-full`} center={[0, 0]} zoom={15} scrollWheelZoom={false} tap={false} whenReady={(event) => setMapData(event.target)}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
