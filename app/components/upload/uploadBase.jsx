@@ -26,11 +26,12 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
     const [uploading, setUploading] = useState(false)
     const [isMobile, setIsMobile] = useState(false);
     const { data: session } = useSession();
-    const { email } = session?.user;
-    console.log(email);
+    let email;
+    if (session) {
+        email = session.user.email;
+    }
 
     async function getUserId() {
-        console.log(email)
         const userId = await fetch('/api/users', {
             method: 'POST',
             headers: {

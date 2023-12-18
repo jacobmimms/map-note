@@ -4,40 +4,18 @@ import prisma from '@/lib/prisma'
 
 export async function GET(request) {
     try {
+        console.log(prisma, )
         const posts = await prisma.post.findMany()
         return NextResponse.json(posts);
 
     } catch (error) {
-        console.log(error);
+        console.error("error getting posts", error);
         return NextResponse.error(error);
     }
 }
 
 
 export async function POST(request) {
-    // schema 
-    //
-    // model Post {
-    //     id          String   @id
-    //     description String
-    //     latitude    Float
-    //     longitude   Float
-    //     createdAt   DateTime @default(now())
-    //     updatedAt   DateTime @updatedAt
-    //     author      User     @relation(fields: [authorId], references: [id])
-    //     authorId    String
-    //   }
-
-    //   model User {
-    //     id            String    @id @default(cuid())
-    //     name          String?
-    //     email         String?   @unique
-    //     emailVerified DateTime?
-    //     image         String?
-    //     accounts      Account[]
-    //     sessions      Session[]
-    //     posts         Post[]
-    //   }
     try {
         // insert user's post into db
         const { description, latitude, longitude, authorId } = await request.json();
@@ -49,13 +27,9 @@ export async function POST(request) {
                 authorId: authorId
             }
         })
-
-        console.log(result)
-
-
         return NextResponse.json(result);
     } catch (error) {
-        console.log(error);
+        console.error("error setting post", error);
         return NextResponse.error(error);
     }
 }

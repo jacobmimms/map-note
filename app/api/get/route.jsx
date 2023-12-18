@@ -28,7 +28,7 @@ export async function POST(request) {
         }
         //return Response.json()
     } catch (error) {
-        console.log(error)
+        console.erro(" error getting signed url", error)
         return Response.json({ error: error.message })
     }
 }

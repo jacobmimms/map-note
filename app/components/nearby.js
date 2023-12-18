@@ -23,17 +23,7 @@ function encodeS3Key(key) {
     }
 }
 
-// async function getPosts() {
-//     const posts = await sql`SELECT * from post`;
-//     if (!posts) {
-//         return null;
-//     }
-//     return posts.rows;
-// }
-
-async function Nearby({ posts }) {
-    // const posts = await getPosts();
-    console.log(posts)
+function Nearby({ posts }) {
     if (!posts) {
         return (
             <div className='flex flex-col items-center justify-center w-full h-full'>

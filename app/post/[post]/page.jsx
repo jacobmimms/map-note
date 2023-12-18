@@ -11,17 +11,6 @@ export async function generateStaticParams() {
     }))
 }
 
-// export async function generateStaticParams() {
-//     const { rows } = await sql`SELECT * from post_db`;
-//     return rows.map((post) => ({
-//         params: {
-//             post: { post }
-//         },
-
-//     }))
-// }
-
-
 const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
 function encodeS3Key(key) {

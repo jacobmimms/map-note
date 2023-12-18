@@ -1,12 +1,11 @@
 import Image from 'next/image';
-import { auth } from '../../auth'
+import auth from '@/auth.js';
 import { getPosts } from '../serverFunctions/posts.jsx'
 
 export default async function Profile() {
     const session = await auth()
     const user = session?.user
-    const userPosts = 
-    console.log(session)
+    console.log(session, "session from app/profile/page.jsx")
     if (!session) {
         return (
             <span>
