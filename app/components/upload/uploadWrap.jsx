@@ -44,7 +44,6 @@ export default function UploadWrap() {
     });
 
     useEffect(() => {
-        console.log(uploadData, 'uploadData')
         if (success) {
             setUploadData({
                 file: null,

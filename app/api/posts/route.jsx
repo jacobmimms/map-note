@@ -1,10 +1,11 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma'
 
 export async function GET(request) {
     try {
-        const { rows } = await sql`SELECT * FROM post_db`;
-        return NextResponse.json(rows);
+        const posts = await prisma.post.findMany()
+        return NextResponse.json(posts);
 
     } catch (error) {
         console.log(error);
@@ -14,31 +15,43 @@ export async function GET(request) {
 
 
 export async function POST(request) {
-    try {
-        const { id, description, latitude, longitude, timestamp, delete_all } = await request.json();
-        if (delete_all) {
-            const result = await sql`DELETE FROM post_db`;
-            return NextResponse.json(result);
-        }
-        if (!id) {
-            const { rows } = await sql`
-            SELECT * FROM (
-                SELECT *, 
-                    6371 * 2 * ASIN(SQRT(
-                        POWER(SIN((${latitude} - abs(latitude)) * pi()/180 / 2),
-                        2) + COS(${latitude} * pi()/180 ) * COS(abs(latitude) * pi()/180)
-                        * POWER(SIN((${longitude} - longitude) * pi()/180 / 2), 2) 
-                    )) as distance
-                FROM post_db
-            ) AS post_db_with_distance
-            WHERE distance < 0.1
-        `;
-            console.log("nearby rows")
-            console.log(rows);
-            return NextResponse.json(rows);
-        }
+    // schema 
+    //
+    // model Post {
+    //     id          String   @id
+    //     description String
+    //     latitude    Float
+    //     longitude   Float
+    //     createdAt   DateTime @default(now())
+    //     updatedAt   DateTime @updatedAt
+    //     author      User     @relation(fields: [authorId], references: [id])
+    //     authorId    String
+    //   }
 
-        const result = await sql`INSERT INTO post_db (id, description, latitude, longitude, timestamp) VALUES (${id}, ${description}, ${latitude}, ${longitude}, ${timestamp})`;
+    //   model User {
+    //     id            String    @id @default(cuid())
+    //     name          String?
+    //     email         String?   @unique
+    //     emailVerified DateTime?
+    //     image         String?
+    //     accounts      Account[]
+    //     sessions      Session[]
+    //     posts         Post[]
+    //   }
+    try {
+        // insert user's post into db
+        const { description, latitude, longitude, authorId } = await request.json();
+        const result = await prisma.post.create({
+            data: {
+                description: description,
+                latitude: latitude,
+                longitude: longitude,
+                authorId: authorId
+            }
+        })
+
+        console.log(result)
+
 
         return NextResponse.json(result);
     } catch (error) {

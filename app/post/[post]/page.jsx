@@ -1,17 +1,25 @@
 import Image from 'next/image'
 import { sql } from '@vercel/postgres';
-
+import prisma from '@/lib/prisma'
 
 export async function generateStaticParams() {
-    const { rows } = await sql`SELECT * from post_db`;
-    // return params { id, description, latitude, longitude, timestamp} for each post
-    return rows.map((post) => ({
+    const posts = await prisma.post.findMany()
+    return posts.map((post) => ({
         params: {
             post: { post }
-        },
-
+        }
     }))
 }
+
+// export async function generateStaticParams() {
+//     const { rows } = await sql`SELECT * from post_db`;
+//     return rows.map((post) => ({
+//         params: {
+//             post: { post }
+//         },
+
+//     }))
+// }
 
 
 const url = 'https://mimms-pictures.s3.amazonaws.com/'

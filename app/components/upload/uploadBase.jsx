@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect } from "react";
 import Loading from '../animations/loading';
+import { useSession } from "next-auth/react";
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
-    const timestamp = new Date().toISOString();
     const description = text;
-    const post = { id, description, latitude, longitude, timestamp };
+    const post = { id, description, latitude, longitude };
     const postResponse = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -15,7 +15,6 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
         body: JSON.stringify(post),
     });
     if (postResponse.ok) {
-        console.log('Post uploaded to database.');
         setSuccess(true);
     } else {
         console.error('Post upload error:', postResponse);
@@ -26,6 +25,22 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
 export default function UploadBase({ location, uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
     const [isMobile, setIsMobile] = useState(false);
+    const { data: session } = useSession();
+    const { email } = session?.user;
+    console.log(email);
+
+    async function getUserId() {
+        console.log(email)
+        const userId = await fetch('/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+        console.log(userId);
+    }
+    getUserId();
 
     useEffect(() => {
         setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -50,11 +65,9 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
                 }
             )
             if (response.ok) {
-                console.log('S3 Upload Success:', response)
                 const { url, fields } = await response.json()
                 const formData = new FormData()
                 Object.entries({ ...fields, file }).forEach(([key, value]) => {
-                    console.log(key, value)
                     formData.append(key, value)
                 })
                 formData.delete('file')
@@ -85,7 +98,6 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
     async function setFile(e) {
         const files = e.target.files
         if (files && files[0]) {
-            console.log(files[0])
             setUploadData({ ...uploadData, file: files[0] })
         }
     }
