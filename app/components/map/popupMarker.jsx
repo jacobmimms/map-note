@@ -7,13 +7,13 @@ const icon = L.icon({
 
 });
 
-export default function PopupMarker({ id, position, imageSrc, description, link, linkText }) {
+export default function PopupMarker({ id, position, imageSrc, content, link, linkText }) {
     return (
         <Marker key={id} position={position} icon={icon}>
             <Popup position={position}>
                 <div className='flex flex-col'>
                     <Image src={imageSrc} width={100} height={100} alt='pop up image' />
-                    <span>{description}</span>
+                    <span>{content}</span>
                     <a href={link}>{linkText}</a>
                 </div>
             </Popup>

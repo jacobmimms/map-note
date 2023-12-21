@@ -1,9 +1,11 @@
-import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import auth from '@/lib/auth';
+
 
 export async function GET(request) {
     try {
-        const { rows } = await sql`SELECT * FROM post_db`;
+        const rows = await prisma.post.findMany();
         return NextResponse.json(rows);
 
     } catch (error) {
@@ -14,32 +16,35 @@ export async function GET(request) {
 
 
 export async function POST(request) {
+    const session = await getSession(request);
+
     try {
-        const { id, description, latitude, longitude, timestamp, delete_all } = await request.json();
-        if (delete_all) {
-            const result = await sql`DELETE FROM post_db`;
-            return NextResponse.json(result);
-        }
+        const { id, title, content, latitude, longitude } = await request.json();
         if (!id) {
-            const { rows } = await sql`
-            SELECT * FROM (
-                SELECT *, 
-                    6371 * 2 * ASIN(SQRT(
-                        POWER(SIN((${latitude} - abs(latitude)) * pi()/180 / 2),
-                        2) + COS(${latitude} * pi()/180 ) * COS(abs(latitude) * pi()/180)
-                        * POWER(SIN((${longitude} - longitude) * pi()/180 / 2), 2) 
-                    )) as distance
-                FROM post_db
-            ) AS post_db_with_distance
-            WHERE distance < 0.1
-        `;
+            const rows = await prisma.post.findMany({
+                where: {
+                    latitude: {
+                        gt: latitude - 0.1,
+                        lt: latitude + 0.1
+                    },
+                    longitude: {
+                        gt: longitude - 0.1,
+                        lt: longitude + 0.1
+                    }
+                }
+            });
             console.log("nearby rows")
             console.log(rows);
             return NextResponse.json(rows);
         }
-
-        const result = await sql`INSERT INTO post_db (id, description, latitude, longitude, timestamp) VALUES (${id}, ${description}, ${latitude}, ${longitude}, ${timestamp})`;
-
+        const result = await prisma.post.create({
+            data: {
+                title: title,
+                content: content,
+                latitude: latitude,
+                longitude: longitude,
+            }
+        });
         return NextResponse.json(result);
     } catch (error) {
         console.log(error);

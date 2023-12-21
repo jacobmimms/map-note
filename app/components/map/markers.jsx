@@ -15,6 +15,13 @@ export default function Markers() {
         }
         getPosts()
     }, [])
+    console.log(posts)
+
+    if (!posts) {
+        return null
+    }
+
+
 
 
     return (
@@ -26,7 +33,7 @@ export default function Markers() {
                         id={post.id}
                         position={[post.latitude, post.longitude]}
                         imageSrc={`${BUCKET_URL}${encodeS3Key(post.id)}`}
-                        description={post.description}
+                        content={post.content}
                         link={`post/${encodeS3Key(post.id)}`}
                         linkText='View Post'
                     />
