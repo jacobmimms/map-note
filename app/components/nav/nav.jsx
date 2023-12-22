@@ -9,7 +9,7 @@ export default async function Nav() {
     const providers = await getProviders()
 
     return (
-        <div className="flex flex-row px-4">
+        <div className="flex flex-row px-4 border-slate-800 border-b-2">
             <NavLink href='/nearby'>
                 Nearby
             </NavLink>

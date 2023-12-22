@@ -3,6 +3,6 @@ import { signOut } from 'next-auth/react';
 
 export default function SignoutButton() {
     return (
-        <button onClick={() => signOut({ callbackUrl: 'http://localhost:3000/' })}>Sign out</button>
+        <button onClick={() => signOut({ callbackUrl: process.env.NEXT_PUBLIC_BASE_URL })}>Sign out</button>
     )
 }

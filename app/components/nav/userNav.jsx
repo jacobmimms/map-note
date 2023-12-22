@@ -1,14 +1,16 @@
 'use client'
 import SigninButton from "./signinButton"
 import SignoutButton from "./signoutButton"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function UserNav({ session, providers }) {
     const [toggle, setToggle] = useState(false)
+
+    useEffect(() => {
+    }, [toggle]);
+
     if (session) {
-        return (
-            <SignoutButton />
-        )
+        return <SignoutButton />;
     }
     return (
 
@@ -17,11 +19,17 @@ export default function UserNav({ session, providers }) {
                 Sign in
             </button>
             {toggle &&
-                <div className="fixed top-14 right-0 rounded-bl-xl p-4 border-t-2  border-slate-700 shadow-slate-700  bg-slate-800 w-[30%] z-10 shadow-2xl">
-                    <div className="flex flex-row w-full h-full items-center justify-center">
-                        <SigninButton provider={providers.google} />
-                    </div>
-                </div >
+                <>
+                    <div className="fixed top-14 right-0 rounded-bl-xl p-4 bg-slate-800 w-[30%] max-w-[250px]">
+                        <div className="flex flex-row items-center content-center justify-center">
+                            <SigninButton provider={providers.google} />
+                        </div>
+                        <div className="fixed top-14 w-[50px] ] right-[calc(min(30%,250px))] bg-transparent rounded-tr-xl shadow-slate-800 shadow-[25px_0px_0px_0px]">
+                            &nbsp;
+                        </div>
+                    </div >
+
+                </>
             }
         </>
     )
