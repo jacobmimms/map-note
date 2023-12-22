@@ -7,7 +7,6 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function DeleteButton() {
     async function deleteALL() {
-        // make a request to the api to delete all posts
         const delete_all = true;
         const response = await fetch('/api/posts', {
             method: 'POST',

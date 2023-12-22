@@ -1,9 +1,11 @@
-import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import {authOptions} from '@/lib/auth';
+import { getServerSession } from 'next-auth';
 
 export async function GET(request) {
     try {
-        const { rows } = await sql`SELECT * FROM post_db`;
+        const rows = await prisma.post.findMany();
         return NextResponse.json(rows);
 
     } catch (error) {
@@ -14,32 +16,54 @@ export async function GET(request) {
 
 
 export async function POST(request) {
+    const session = await getServerSession({ req: request, ...authOptions });
+    console.log(session, "session");
+    if (!session) {
+        return NextResponse.redirect('/api/auth/signin');
+    }
+    // get user id from database
+    const user = await prisma.user.findUnique({
+        where: {
+            email: session.user.email
+        }
+    });
+    const userId = user.id;
+    console.log(userId, "userId");
+
+
+
     try {
-        const { id, description, latitude, longitude, timestamp, delete_all } = await request.json();
+        const {title, content, latitude, longitude, delete_all } = await request.json();
         if (delete_all) {
-            const result = await sql`DELETE FROM post_db`;
+            const result = await prisma.post.deleteMany({});
             return NextResponse.json(result);
         }
-        if (!id) {
-            const { rows } = await sql`
-            SELECT * FROM (
-                SELECT *, 
-                    6371 * 2 * ASIN(SQRT(
-                        POWER(SIN((${latitude} - abs(latitude)) * pi()/180 / 2),
-                        2) + COS(${latitude} * pi()/180 ) * COS(abs(latitude) * pi()/180)
-                        * POWER(SIN((${longitude} - longitude) * pi()/180 / 2), 2) 
-                    )) as distance
-                FROM post_db
-            ) AS post_db_with_distance
-            WHERE distance < 0.1
-        `;
-            console.log("nearby rows")
-            console.log(rows);
-            return NextResponse.json(rows);
-        }
-
-        const result = await sql`INSERT INTO post_db (id, description, latitude, longitude, timestamp) VALUES (${id}, ${description}, ${latitude}, ${longitude}, ${timestamp})`;
-
+        // if (!id) {
+        //     const rows = await prisma.post.findMany({
+        //         where: {
+        //             latitude: {
+        //                 gt: latitude - 0.1,
+        //                 lt: latitude + 0.1
+        //             },
+        //             longitude: {
+        //                 gt: longitude - 0.1,
+        //                 lt: longitude + 0.1
+        //             }
+        //         }
+        //     });
+        //     console.log("nearby rows")
+        //     console.log(rows);
+        //     return NextResponse.json(rows);
+        // }
+        const result = await prisma.post.create({
+            data: {
+                authorId: userId,
+                title: title,
+                content: content,
+                latitude: latitude,
+                longitude: longitude,
+            }
+        });
         return NextResponse.json(result);
     } catch (error) {
         console.log(error);

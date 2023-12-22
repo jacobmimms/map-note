@@ -4,9 +4,9 @@ import Loading from '../animations/loading';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
-    const timestamp = new Date().toISOString();
-    const description = text;
-    const post = { id, description, latitude, longitude, timestamp };
+    const content = text;
+    const title = id;
+    const post = { content, latitude, longitude, title};
     const postResponse = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -14,6 +14,8 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
         },
         body: JSON.stringify(post),
     });
+
+    console.log(postResponse)
     if (postResponse.ok) {
         console.log('Post uploaded to database.');
         setSuccess(true);
@@ -116,7 +118,7 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
                 <textarea
                     className='bg-slate-200 text-slate-800 h-full w-full rounded-lg mt-2 p-2'
                     type='text'
-                    id='description'
+                    id='content'
                     placeholder='Write your thoughts here!'
                     onChange={
                         (e) => {

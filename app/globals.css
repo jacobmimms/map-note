@@ -32,9 +32,9 @@ body {
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
-#map {
+/* #map {
   height: 50vh;
-}
+} */
 
 
 .leaflet-control { z-index: 0 !important}

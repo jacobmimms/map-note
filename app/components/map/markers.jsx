@@ -15,8 +15,9 @@ export default function Markers() {
         }
         getPosts()
     }, [])
-
-
+    if (!posts) {
+        return null
+    }
     return (
         <>
             {posts.map((post) => {
@@ -25,9 +26,9 @@ export default function Markers() {
                         key={post.id}
                         id={post.id}
                         position={[post.latitude, post.longitude]}
-                        imageSrc={`${BUCKET_URL}${encodeS3Key(post.id)}`}
-                        description={post.description}
-                        link={`post/${encodeS3Key(post.id)}`}
+                        imageSrc={`${BUCKET_URL}${encodeS3Key(post.title)}`}
+                        content={post.content}
+                        link={`post/${encodeS3Key(post.title)}`}
                         linkText='View Post'
                     />
                 )
