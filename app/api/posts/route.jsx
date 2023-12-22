@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import {authOptions} from '@/lib/auth';
+import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 
 export async function GET(request) {
@@ -33,7 +33,7 @@ export async function POST(request) {
 
 
     try {
-        const {title, content, latitude, longitude, delete_all } = await request.json();
+        const { title, content, latitude, longitude, delete_all } = await request.json();
         if (delete_all) {
             const result = await prisma.post.deleteMany({});
             return NextResponse.json(result);

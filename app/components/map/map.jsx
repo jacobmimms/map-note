@@ -29,7 +29,7 @@ function Map() {
     const position = useLocation();
     const [mapData, setMapData] = useState()
     if (!position) return (
-        <div className={`flex items-center justify-center w-full h-full  bg-slate-700`}>  <Loading /></div>
+        <div className={`flex items-center justify-center w-full h-full  bg-slate-600`}>  <Loading /></div>
     );
 
     return (

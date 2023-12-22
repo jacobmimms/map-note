@@ -3,13 +3,6 @@ import { encodeS3Key } from '@/app/utils/main';
 import prisma from '@/lib/prisma';
 
 export async function generateStaticParams() {
-    // const { rows } = await sql`SELECT * from post_db`;
-    // return rows.map((post) => ({
-    //     params: {
-    //         post: { post }
-    //     },
-
-    // }))
     const posts = await prisma.post.findMany()
     return posts.map((post) => ({
         params: {
