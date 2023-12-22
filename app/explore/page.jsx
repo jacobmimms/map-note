@@ -8,15 +8,13 @@ const DynamicMap = dynamic(() => import('../components/map/mapComponent'), {
 });
 
 
-function Page() {
-    const [mapData, setMapData] = useState(null);
-    const [marker, setMarker] = useState(null);
+function ExplorePage() {
     return (
-        <main className='h-full flex items-center justify-center overflow-hidden' style={{ position: 'relative' }}>
+        <section className='h-full relative items-center justify-center overflow-hidden'>
             <DynamicMap />
             <UploadComponent />
-        </main>
+        </section>
     );
 };
 
-export default Page;
+export default ExplorePage;

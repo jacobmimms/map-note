@@ -66,18 +66,19 @@ export default function UploadWrap() {
         <>
             {success && (
                 <div className="fixed bottom-0 left-0 p-4 z-10 w-full">
-                    <div className="bg-green-500 rounded-lg shadow-md">
+                    <div className="bg-green-500 rounded-md shadow-md p-4">
                         <p className="text-white text-center">Upload successful!</p>
                     </div>
                 </div>
             )}
             {failure && (
                 <div className="fixed bottom-0 left-0 p-4 z-10 w-full">
-                    <div className="bg-red-500 rounded-lg shadow-md">
+                    <div className="bg-red-500 rounded-md shadow-md p-4">
                         <p className="text-white text-center">Upload failed!</p>
                     </div>
                 </div>
             )}
+
             <div className={`fixed bottom-0 right-0 p-4 z-10 ${shelfOpen ? 'w-full' : 'w-16'}`}>
                 {shelfOpen && (
                     <div className="bg-slate-400 rounded-lg shadow-md">
