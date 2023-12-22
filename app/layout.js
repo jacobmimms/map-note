@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className='w-full min-h-full h-full overflow-hidden'>
       <body className='h-full flex flex-col'>
         <Header />
-        <section className='overflow-scro`0-ll h-full pt-[60px]  bg-slate-600'>
+        <section className='overflow-scroll h-full pt-[56px]  bg-slate-600'>
           {children}
         </section>
       </body>

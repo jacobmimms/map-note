@@ -6,7 +6,6 @@ import prisma from '@/lib/prisma';
 
 
 async function getPosts() {
-    // const posts = await sql`SELECT * from post_db`;
     const posts = await prisma.post.findMany({
         orderBy: {
             createdAt: 'desc'
@@ -16,7 +15,7 @@ async function getPosts() {
     if (!posts) {
         return null;
     }
-    return posts.rows;
+    return posts;
 }
 
 async function Nearby() {
@@ -24,7 +23,7 @@ async function Nearby() {
     if (!posts) {
         return (
             <div className='flex flex-col items-center justify-center w-full h-full'>
-                <Loading />
+               There are no posts
             </div>
         )
     }
@@ -36,7 +35,7 @@ async function Nearby() {
                     <p>{post.content}</p>
                     <Image
                         className='w-full h-64 object-cover'
-                        src={`${BUCKET_URL}${encodeS3Key(post.id)}`}
+                        src={`${BUCKET_URL}${encodeS3Key(post.title)}`}
                         alt={`${post.content ? post.content : 'Post'}`}
                         width={300}
                         height={300}

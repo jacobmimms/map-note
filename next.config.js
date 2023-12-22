@@ -7,11 +7,14 @@ const nextConfig = {
                 hostname: 'mimms-pictures.s3.amazonaws.com',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+                pathname: '/**',
+            },
         ],
+
     },
-    // images: {
-    //     domains: ['mimms-pictures.s3.amazonaws.com'], // Set the allowed domains for images
-    // },
 };
 
 module.exports = nextConfig

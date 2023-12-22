@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import auth from '@/lib/auth';
-
+import {authOptions} from '@/lib/auth';
+import { getServerSession } from 'next-auth';
 
 export async function GET(request) {
     try {
@@ -16,29 +16,48 @@ export async function GET(request) {
 
 
 export async function POST(request) {
-    const session = await getSession(request);
+    const session = await getServerSession({ req: request, ...authOptions });
+    console.log(session, "session");
+    if (!session) {
+        return NextResponse.redirect('/api/auth/signin');
+    }
+    // get user id from database
+    const user = await prisma.user.findUnique({
+        where: {
+            email: session.user.email
+        }
+    });
+    const userId = user.id;
+    console.log(userId, "userId");
+
+
 
     try {
-        const { id, title, content, latitude, longitude } = await request.json();
-        if (!id) {
-            const rows = await prisma.post.findMany({
-                where: {
-                    latitude: {
-                        gt: latitude - 0.1,
-                        lt: latitude + 0.1
-                    },
-                    longitude: {
-                        gt: longitude - 0.1,
-                        lt: longitude + 0.1
-                    }
-                }
-            });
-            console.log("nearby rows")
-            console.log(rows);
-            return NextResponse.json(rows);
+        const {title, content, latitude, longitude, delete_all } = await request.json();
+        if (delete_all) {
+            const result = await prisma.post.deleteMany({});
+            return NextResponse.json(result);
         }
+        // if (!id) {
+        //     const rows = await prisma.post.findMany({
+        //         where: {
+        //             latitude: {
+        //                 gt: latitude - 0.1,
+        //                 lt: latitude + 0.1
+        //             },
+        //             longitude: {
+        //                 gt: longitude - 0.1,
+        //                 lt: longitude + 0.1
+        //             }
+        //         }
+        //     });
+        //     console.log("nearby rows")
+        //     console.log(rows);
+        //     return NextResponse.json(rows);
+        // }
         const result = await prisma.post.create({
             data: {
+                authorId: userId,
                 title: title,
                 content: content,
                 latitude: latitude,

@@ -4,9 +4,9 @@ import Loading from '../animations/loading';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
-    const timestamp = new Date().toISOString();
     const content = text;
-    const post = { id, content, latitude, longitude, timestamp };
+    const title = id;
+    const post = { content, latitude, longitude, title};
     const postResponse = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -14,6 +14,8 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
         },
         body: JSON.stringify(post),
     });
+
+    console.log(postResponse)
     if (postResponse.ok) {
         console.log('Post uploaded to database.');
         setSuccess(true);
