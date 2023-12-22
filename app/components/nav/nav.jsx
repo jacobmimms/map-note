@@ -9,14 +9,14 @@ export default async function Nav() {
     const providers = await getProviders()
 
     return (
-        <div className="flex flex-row px-4 border-slate-800 border-b-2">
+        <div className="flex flex-row border-slate-800 border-b-2">
             <NavLink href='/nearby'>
                 Nearby
             </NavLink>
             <NavLink href='/explore'>
                 Explore
             </NavLink>
-            <div className="ml-4 w-full flex flex-row content-center items-center">
+            <div className="w-full h-full flex flex-row content-center items-center hover:bg-slate-700 p-4">
                 <UserNav session={session} providers={providers} />
             </div>
         </div >

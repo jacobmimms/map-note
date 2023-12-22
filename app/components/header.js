@@ -12,7 +12,7 @@ export default async function Header() {
             <section className='w-full  bg-slate-800 flex flex-row items-center justify-between '>
 
                 <h1 className='text-2xl md:text-3xl font-bold text-slate-200 p-2'>
-                    <Link href='/' >
+                    <Link href='/' className="select-none">
                         Loc.Pics
                         {/* <Image className="rounded-full" src='/locpics.png' width={40} height={40}>
                         </Image> */}

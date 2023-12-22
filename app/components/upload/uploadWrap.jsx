@@ -63,7 +63,7 @@ export default function UploadWrap() {
     };
 
     return (
-        <>
+        <div className='select-none'>
             {success && (
                 <div className="fixed bottom-0 left-0 p-4 z-10 w-full">
                     <div className="bg-green-500 rounded-md shadow-md p-4">
@@ -96,6 +96,6 @@ export default function UploadWrap() {
                     )}
                 </button>
             </div>
-        </>
+        </div>
     )
 }   
