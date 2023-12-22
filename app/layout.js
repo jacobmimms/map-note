@@ -22,8 +22,9 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={`${noto.className} w-full min-h-screen overflow-hidden`}>
       <body className='min-h-screen'>
         <Header />
+
         <SessionProvider session={session}>
-          <main className='h-full mt-[56px] overflow-scroll  bg-slate-600'>
+          <main className='h-full overflow-scroll  bg-slate-600'>
             {children}
           </main>
         </SessionProvider>
