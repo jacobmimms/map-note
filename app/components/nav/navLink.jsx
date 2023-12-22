@@ -9,7 +9,7 @@ export default function NavLink(props) {
     let className = isActive ? 'bg-slate-600 text-slate-950 cursor-default' : 'bg-slate-800 text-slate-200  hover:bg-slate-700'
     return (
         <Link  {...props} className={`${className} h-full py-4 px-4`}>
-            <div className='h-full'>
+            <div className='h-full select-none'>
                 {props.children}
             </div>
         </Link>
