@@ -13,6 +13,7 @@ import LocateMe from './locateMe'
 function Map() {
     const userLocation = useLocation();
     const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+    const mapRef = useRef(null);
 
     useEffect(() => {
         if (userLocation) {
@@ -29,13 +30,27 @@ function Map() {
         return <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>;
     }
 
-    console.log('position', position)
+    // console.log('position', position)
 
-    const handleMapCreate = (map) => {
-        map.locate(
+    // const handleMapCreate = (map) => {
+    //     console.log('map created');
+    //     mapRef.current = map;
+    //     map.locate(
+    //         {
+    //             setView: true,
+    //             maxZoom: 14,
+    //             watch: true,
+    //             enableHighAccuracy: true
+    //         }
+    //     );
+    // }
+
+    const handleReady = (e) => {
+        mapRef.current = e.target;
+        e.target.locate(
             {
                 setView: true,
-                maxZoom: 15,
+                maxZoom: 14,
                 watch: true,
                 enableHighAccuracy: true
             }
@@ -43,7 +58,7 @@ function Map() {
     }
 
     return (
-        <MapContainer className={`h-full w-full`} center={[position.latitude, position.longitude]} zoom={15} zoomControl={false} scrollWheelZoom={false} tap={false} whenCreated={handleMapCreate}>
+        <MapContainer className={`h-full w-full`} center={[position.latitude, position.longitude]} zoom={15} zoomControl={false} scrollWheelZoom={false} tap={false} whenReady={handleReady}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

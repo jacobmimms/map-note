@@ -15,6 +15,7 @@ export default function Markers() {
         }
         getPosts()
     }, [])
+
     if (!posts) {
         return null
     }
