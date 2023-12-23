@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, createContext, useContext } from "react";
 
-const MIN_DISTANCE = 20;
+const MIN_DISTANCE = 10;
 
 function getDistance(location1, location2) {
     if (!location1 || !location2) return MIN_DISTANCE + 1;
@@ -28,18 +28,29 @@ export const LocationProvider = ({ children }) => {
     const [locationSet, setLocationSet] = useState(false);
 
     useEffect(() => {
+        console.log("useEffect in location.jsx")
         if (getDistance(location, pastLocation) < MIN_DISTANCE) {
+
+            "location is the same as past location"
             return;
         }
 
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-            const { latitude, longitude } = coords;
-            const newLocation = { latitude, longitude };
+        navigator.geolocation.getCurrentPosition(
 
-            setPastLocation(location);
-            setLocation(newLocation);
-            setLocationSet(true);
-        });
+            ({ coords }) => {
+                const { latitude, longitude } = coords;
+                const newLocation = { latitude, longitude };
+
+                setPastLocation(location);
+                setLocation(newLocation);
+                setLocationSet(true);
+            },
+            (error) => {
+                console.error("Error getting location", error);
+            },
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+
+        );
     }, [location, locationSet, pastLocation]);
 
     return (

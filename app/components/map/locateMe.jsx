@@ -15,12 +15,8 @@ export default function LocateMe() {
             maxZoom: 14,
         });
         map.on('locationfound', () => {
-            console.log('location found')
             setDisable(false);
         });
-        setTimeout(() => {
-            setDisable(false);
-        }, 5000);
     }
 
     const disabled = disable ? 'spinner' : 'text-white';
