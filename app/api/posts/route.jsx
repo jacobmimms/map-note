@@ -18,8 +18,9 @@ export async function GET(request) {
 export async function POST(request) {
     const session = await getServerSession({ req: request, ...authOptions });
     console.log(session, "session");
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     if (!session) {
-        return NextResponse.redirect('/api/auth/signin');
+        return NextResponse.redirect(`${baseUrl}`);
     }
     // get user id from database
     const user = await prisma.user.findUnique({

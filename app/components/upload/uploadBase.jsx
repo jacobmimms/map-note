@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import Loading from '../animations/loading';
 
+// TODO 
+
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
     const content = text;
     const title = id;
-    const post = { content, latitude, longitude, title};
+    const post = { content, latitude, longitude, title };
     const postResponse = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -15,8 +17,12 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
         body: JSON.stringify(post),
     });
 
-    console.log(postResponse)
     if (postResponse.ok) {
+        if (postResponse.redirected) {
+            console.log('Redirected to login page.');
+            setFailure(true);
+            return;
+        }
         console.log('Post uploaded to database.');
         setSuccess(true);
     } else {
