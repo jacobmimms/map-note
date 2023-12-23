@@ -2,6 +2,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 
 const MIN_DISTANCE = 20;
+
 function getDistance(location1, location2) {
     if (!location1 || !location2) return MIN_DISTANCE + 1;
     // calculate distance between two points

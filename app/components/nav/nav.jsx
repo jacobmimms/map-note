@@ -16,7 +16,7 @@ export default async function Nav() {
             <NavLink href='/explore'>
                 Explore
             </NavLink>
-            <div className="w-full h-full flex flex-row content-center items-center hover:bg-slate-700 p-4">
+            <div className="w-full h-full flex flex-row content-center items-center">
                 <UserNav session={session} providers={providers} />
             </div>
         </div >
