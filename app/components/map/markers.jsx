@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main'
 import PopupMarker from './popupMarker'
-
 
 
 export default function Markers() {
@@ -9,14 +8,19 @@ export default function Markers() {
 
     useEffect(() => {
         async function getPosts() {
-            let res = await fetch('/api/posts', { method: 'GET' })
-            let data = await res.json()
-            setPosts(data)
+            try {
+                let res = await fetch('/api/posts', { method: 'GET' })
+                let data = await res.json()
+                setPosts(data)
+            }
+            catch (err) {
+                console.error("Error in getPosts for markers", err);
+            }
         }
         getPosts()
     }, [])
 
-    if (!posts) {
+    if (posts.length === 0) {
         return null
     }
     return (
