@@ -11,13 +11,12 @@ import LocateMe from './locateMe'
 function Map() {
     const mapRef = useRef(null);
     const savedLocation = localStorage.getItem('lastLocation');
+    const [loading, setLoading] = useState(true);
     const [position, setPosition] = useState(
         savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
     );
 
-    // if (position.latitude === 0 && position.longitude === 0) {
-    //     return <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>;
-    // }
+
 
     const handleReady = (e) => {
         console.log('map ready');
@@ -33,11 +32,18 @@ function Map() {
             setPosition({ latitude: e.latitude, longitude: e.longitude });
             localStorage.setItem('lastLocation', JSON.stringify({ latitude: e.latitude, longitude: e.longitude }));
         });
+        e.target.on('locationerror', (e) => {
+            console.log(e);
+        });
+        setLoading(false);
     }
 
+    if (loading && mapRef.current !== null) {
+        return <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>;
+    }
 
     return (
-        <MapContainer className={`h-full w-full`} center={[position.latitude, position.longitude]} zoom={14} zoomControl={false} scrollWheelZoom={false} tap={false} whenReady={handleReady}>
+        <MapContainer ref={mapRef} className={`h-full w-full`} center={[position.latitude, position.longitude]} zoom={14} zoomControl={false} scrollWheelZoom={false} tap={false} whenReady={handleReady}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
