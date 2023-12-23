@@ -12,6 +12,7 @@ export default function LocateMe() {
         setDisable(true);
         map.locate({
             setView: true,
+            watch: false,
             maxZoom: 14,
         });
         map.on('locationfound', () => {

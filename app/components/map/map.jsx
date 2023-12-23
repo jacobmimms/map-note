@@ -21,14 +21,17 @@ function Map() {
     const handleReady = (e) => {
         console.log('map ready');
         mapRef.current = e.target;
+        console.log("locating user")
         e.target.locate(
             {
                 setView: true,
+                watch: false,
                 maxZoom: 14,
                 enableHighAccuracy: true
             }
         );
         e.target.on('locationfound', (e) => {
+            mapRef.current.setView(e.latlng, 14);
             setPosition({ latitude: e.latitude, longitude: e.longitude });
             localStorage.setItem('lastLocation', JSON.stringify({ latitude: e.latitude, longitude: e.longitude }));
         });
@@ -38,7 +41,7 @@ function Map() {
         setLoading(false);
     }
 
-    if (loading && mapRef.current !== null) {
+    if (mapRef.current !== null && location.latitude == 0 && location.longitude == 0) {
         return <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>;
     }
 
