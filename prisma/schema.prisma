@@ -56,7 +56,6 @@ model Account {
 
     @@unique([provider, providerAccountId])
     @@index([userId])
-    
 }
 
 model Session {
