@@ -17,10 +17,11 @@ export default function PostCard({ post }) {
 
             <div className='flex flex-col overflow-none whitespace-nowrap w-full pl-[5%] mt-2 gap-2'>
                 {post.content}
-
-                <Link className='bg-slate-700 rounded-md hover:bg-slate-600 w-32 text-center p-2' href={`/explore?latitude=${post.latitude}&longitude=${post.longitude}`}>
-                    View on map
-                </Link>
+                {post.latitude && post.longitude &&
+                    <Link className='bg-slate-700 rounded-md hover:bg-slate-600 w-24 text-center p-2' href={{ pathname: '/explore', query: { latitude: post.latitude, longitude: post.longitude } }}>
+                        Map Link
+                    </Link>
+                }
             </div>
 
             <div className=' w-[90%] pl-[5%]'>
