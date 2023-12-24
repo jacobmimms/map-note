@@ -1,10 +1,10 @@
-import { LocationProvider } from '@/app/hooks/location';
+// import { LocationProvider } from '@/app/hooks/location';
 import Nearby from './nearby';
 
 export default function NearbyPage() {
     return (
-        <LocationProvider>
-            <Nearby />
-        </LocationProvider>
+        // <LocationProvider>
+        <Nearby />
+        // </LocationProvider>
     );
 }

@@ -25,40 +25,40 @@ export const LocationContext = createContext();
 export const LocationProvider = ({ children }) => {
     const [location, setLocation] = useState(null);
     const [pastLocation, setPastLocation] = useState({ lat: 0, long: 0 });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         console.log("useEffect in location.jsx")
         if (getDistance(location, pastLocation) < MIN_DISTANCE) {
-
             "location is the same as past location"
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
-
             ({ coords }) => {
                 const { latitude, longitude } = coords;
                 const newLocation = { latitude, longitude };
 
                 setPastLocation(location);
                 setLocation(newLocation);
+                setLoading(false);
             },
             (error) => {
                 console.error("Error getting location", error);
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-
         );
     }, [location, pastLocation]);
 
+
     return (
-        <LocationContext.Provider value={location}>
+        <LocationContext.Provider value={{ location, loading }}>
             {children}
         </LocationContext.Provider>
     );
 };
 
 // Create a custom hook that lets the component use location
-export const useLocation = () => {
+export default function useLocation() {
     return useContext(LocationContext);
 };

@@ -51,7 +51,7 @@ function Map() {
             />
             <LocateMe position={position} />
             <LocationMarker />
-            {/* <Markers /> */}
+            <Markers />
         </MapContainer>
     );
 }
