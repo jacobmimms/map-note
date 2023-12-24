@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
 import Loading from '../animations/loading'
@@ -15,21 +16,35 @@ function Map() {
     const [position, setPosition] = useState(
         savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
     );
+    const params = useSearchParams();
+    const latitude = params.get('latitude');
+    const longitude = params.get('longitude');
 
+    console.log(latitude, longitude)
 
 
     const handleReady = (e) => {
+        console.log("map ready")
         mapRef.current = e.target;
+
+        if (latitude && longitude) {
+            console.log("setting view")
+            mapRef.current.setView([latitude, longitude], 14);
+
+        }
+
         e.target.locate(
             {
-                setView: true,
+                setView: false,
                 watch: false,
                 maxZoom: 14,
                 enableHighAccuracy: true
             }
         );
         e.target.on('locationfound', (e) => {
-            mapRef.current.setView(e.latlng, 14);
+            if (!latitude && !longitude) {
+                mapRef.current.setView(e.latlng, 14);
+            }
             setPosition({ latitude: e.latitude, longitude: e.longitude });
             localStorage.setItem('lastLocation', JSON.stringify({ latitude: e.latitude, longitude: e.longitude }));
         });
