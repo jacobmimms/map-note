@@ -19,9 +19,7 @@ function Map() {
 
 
     const handleReady = (e) => {
-        console.log('map ready');
         mapRef.current = e.target;
-        console.log("locating user")
         e.target.locate(
             {
                 setView: true,
@@ -51,7 +49,7 @@ function Map() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <LocateMe />
+            <LocateMe position={position} />
             <LocationMarker />
             <Markers />
         </MapContainer>
