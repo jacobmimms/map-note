@@ -1,10 +1,11 @@
 'use client'
 import { useEffect, useState, useMemo } from 'react'
-// import { useLocation } from '../../hooks/location';
 import UploadBase from './uploadBase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { LocationProvider } from '../../hooks/location';
+
+
+
 
 function DeleteButton() {
     async function deleteALL() {
@@ -34,18 +35,18 @@ export default function UploadWrap() {
     const [shelfOpen, setShelfOpen] = useState(false);
     const [success, setSuccess] = useState(false);
     const [failure, setFailure] = useState(false);
-    // const location = useLocation();
 
     const [uploadData, setUploadData] = useState({
         file: null,
-        text: ''
+        text: '',
     });
+
 
     useEffect(() => {
         if (success) {
             setUploadData({
                 file: null,
-                text: ''
+                text: '',
             });
             setTimeout(() => {
                 setSuccess(false);
@@ -87,9 +88,7 @@ export default function UploadWrap() {
 
             <div className={`${shelfClass} bg-transparent bottom-0 right-0 rounded-lg shadow-md w-full`}>
                 {/* <DeleteButton /> */}
-                <LocationProvider>
-                    <UploadBase uploadData={uploadData} setUploadData={setUploadData} toggleShelf={toggleShelf} setFailure={setFailure} setSuccess={setSuccess} />
-                </LocationProvider>
+                <UploadBase uploadData={uploadData} setUploadData={setUploadData} toggleShelf={toggleShelf} setFailure={setFailure} setSuccess={setSuccess} />
             </div>
 
             <div className={`fixed bottom-0 right-0 `}>
