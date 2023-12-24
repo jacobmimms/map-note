@@ -2,42 +2,10 @@
 import Image from 'next/image';
 import Loading from '../components/animations/loading';
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main';
-import useLocation from '@/app/hooks/location';
 import { useEffect, useState } from 'react';
+import PostCard from './postCard';
 
 
-// async function getPosts({ latitude, longitude }) {
-//     // const posts = await prisma.post.findMany({
-//     //     orderBy: {
-//     //         createdAt: 'desc'
-//     //     },
-//     //     take: 10
-//     // });
-
-//     // find posts that are nearest to the user
-
-//     async function getPostsOrderedByProximity(latitude, longitude) {
-//         const query = `
-//           SELECT *, earth_distance(
-//             ll_to_earth(${lat}, ${long}),
-//             ll_to_earth("latitude", "longitude")
-//           ) as distance
-//           FROM "Post"
-//           ORDER BY distance ASC
-//         `;
-
-//         return await prisma.$queryRaw(query);
-//     }
-
-//     const posts = await getPostsOrderedByProximity(latitude, longitude);
-
-
-
-//     if (!posts) {
-//         return null;
-//     }
-//     return posts;
-// }
 
 async function getNearbyPosts({ latitude, longitude }) {
     let posts
@@ -95,30 +63,25 @@ function Nearby() {
     }
 
     return (
-        <>
-            <h1 className='text-2xl font-bold text-slate-200 bg-slate-600 w-full'>
+        <section className='w-full overflow-scroll flex flex-col items-center justify-center'>
+            <h1 className='text-2xl font-bold text-slate-200 bg-slate-600 mt-2'>
                 Nearby Posts
             </h1>
-            <hr className='my-2' />
-            <div>
-                {posts.map((post) => (
-                    <div key={post.id}>
-                        <h2 className='text-wrap'>{post.title}</h2>
-                        <p>{post.content}</p>
-                        <Image
-                            className='w-full h-64 object-cover'
-                            src={`${BUCKET_URL}${encodeS3Key(post.title)}`}
-                            alt={`${post.content ? post.content : 'Post'}`}
-                            width={300}
-                            height={300}
-                        />
-
-                        <hr className='my-2' />
-
-                    </div>
-                ))}
+            <div className='w-[50%]'>
+                <hr className='my-1' />
             </div>
-        </>)
+            <div className='w-full flex flex-col flex-wrap items-center justify-center'>
+                {posts
+                    .map(
+                        (post) => (
+                            <PostCard key={post.id} post={post} />
+                        )
+                    )
+                }
+            </div>
+        </section>
+    )
+
 }
 
 export default Nearby;

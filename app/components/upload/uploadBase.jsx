@@ -113,8 +113,8 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
     async function setFile(e) {
         const files = e.target.files
         if (files && files[0]) {
-            if (files[0].size > 2000000) {
-                alert('File size too large. Please select a file smaller than 2MB.')
+            if (files[0].size > 5000000) {
+                alert('File size too large. Please select a file smaller than 5MB.')
                 return
             }
             if (!location.latitude || !location.longitude) {

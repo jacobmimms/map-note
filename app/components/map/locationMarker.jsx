@@ -5,12 +5,7 @@ import { useMemo, useState, useEffect, useRef } from 'react';
 export default function LocationMarker() {
     const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
     const circleRef = useRef(null);
-    function pulseCircle() {
-        console.log('pulse');
-        setInterval(() => {
-            setRadius((oldRadius) => (oldRadius === 10 ? 15 : 10));
-        }, 1000);
-    }
+
 
     useEffect(() => {
 
@@ -56,8 +51,6 @@ export default function LocationMarker() {
         iconUrl: './location.png',
         iconSize: [15, 15],
     }), []);
-
-    console.log("hi")
 
     return (
         <>
