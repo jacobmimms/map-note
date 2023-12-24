@@ -1,8 +1,8 @@
 'use client'
 import { useState, useEffect } from "react";
 import Loading from '../animations/loading';
-
-// TODO 
+import { useLocation } from '../../hooks/location';
+import Image from 'next/image';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
@@ -31,7 +31,8 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     }
 }
 
-export default function UploadBase({ location, uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
+export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
+    const location = useLocation();
     const [uploading, setUploading] = useState(false)
     const [isMobile, setIsMobile] = useState(false);
 
@@ -99,33 +100,39 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
     }
 
     return (
-        <>
-            <form className='flex flex-col justify-center items-start w-full h-full p-2' onSubmit={handleSubmit}>
-                <div className="flex flex-row items-center justify-center w-full h-full p-1">
-                    <label className='bg-slate-200 rounded-md p-1 text-slate-800 hover:cursor-pointer' htmlFor="file">
-                        {uploadData.file ? 'Select a new file' : 'Select a file'}
-                    </label>
+        <div className="flex flex-col justify-between items-start pb-5">
+            {
+                uploadData.file &&
+                <div className='relative h-[200px] w-[200px] flex flex-row items-center justify-left bg-transparent p-2 mx-4 rounded-lg'>
+                    <Image fill src={URL.createObjectURL(uploadData.file)} alt="preview image" className="rounded-md object-cover " />
+                </div>
+            }
+            <form className='w-full px-4' onSubmit={handleSubmit}>
+                <div className="flex flex-row items-center justify-left w-full h-full p-1">
                     <input
-                        className='bg-blue-500 rounded-lg hidden'
+                        className='hidden'
                         id="file"
                         type="file"
                         onChange={setFile}
                         accept="image/png, image/jpeg"
                     />
-                    {isMobile && <><span>&nbsp; or &nbsp; </span><label className='bg-slate-200 rounded-md p-1 text-slate-800 hover:cursor-pointer' htmlFor="camera-pic">
-                        Take a picture
-                        <input id='camera-pic' type="file" accept="image/*" capture="camera" className="hidden" onChange={setFile}></input>
-                    </label></>}
+
+                    {isMobile &&
+                        <><span>&nbsp; or &nbsp; </span><label className='rounded-md  px-4 py-2 hover:cursor-pointer bg-slate-700 hover:shadow-md ' htmlFor="camera-pic">
+                            Take a picture
+                            <input id='camera-pic' type="file" accept="image/*" capture="camera" className="hidden" onChange={setFile}></input>
+                        </label>
+                        </>
+                    }
 
                 </div>
-                <span>
-                    {uploadData.file && uploadData.file.name}
-                </span>
+
                 <textarea
-                    className='bg-slate-200 text-slate-800 h-full w-full rounded-lg mt-2 p-2'
+                    className='h-full w-full rounded-lg p-2 mb-1 bg-slate-700 '
                     type='text'
                     id='content'
                     placeholder='Write your thoughts here!'
+                    rows={2}
                     onChange={
                         (e) => {
                             setUploadData({ ...uploadData, text: e.target.value })
@@ -134,15 +141,38 @@ export default function UploadBase({ location, uploadData, setUploadData, toggle
                     value={uploadData.text}
                 >
                 </textarea>
+                <div className="px-20 w-full flex flex-row justify-between">
+                    <div className="w-1/3 flex flex-row items-center justify-center" >
 
-                {!uploading ? <button className='block bg-slate-500 text-slate-300 rounded-md hover:cursor-pointer min-w-fit w-auto px-4 py-2 mt-2' type="submit" disabled={uploading}>
-                    Upload
-                </button> :
-                    <button className='block bg-slate-500 text-slate-300 rounded-md min-w-fit w-auto px-4 py-2 mt-2' type="submit" disabled={uploading}>
-                        <Loading />
-                    </button>
-                }
+                        <label className='rounded-md px-4 py-2 hover:cursor-pointer bg-slate-700 hover:shadow-md ' htmlFor="file">
+                            {uploadData.file ? 'Select a new file' : 'Select a file'}
+                        </label>
+                    </div>
+
+                    <div className="w-1/3 flex flex-row items-center justify-center" >
+                        <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-700' type="submit" disabled={uploading}>
+                            {
+                                !uploading ?
+                                    "Upload" :
+                                    <Loading />
+
+                            }
+                        </button>
+
+                    </div>
+
+                    <div className="w-1/3 flex flex-row items-center justify-center h-8" >
+                        {
+                            uploadData?.file?.name ?
+                                (<span className="block rounded-md px-4 py-2 bg-slate-700 overflow-scroll whitespace-nowrap">
+                                    {uploadData.file?.name}
+                                </span>) : null
+                        }
+
+                    </div>
+                </div>
             </form>
-        </>
+
+        </div>
     )
 }

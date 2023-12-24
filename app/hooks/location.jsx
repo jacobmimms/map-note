@@ -25,7 +25,6 @@ export const LocationContext = createContext();
 export const LocationProvider = ({ children }) => {
     const [location, setLocation] = useState(null);
     const [pastLocation, setPastLocation] = useState({ lat: 0, long: 0 });
-    const [locationSet, setLocationSet] = useState(false);
 
     useEffect(() => {
         console.log("useEffect in location.jsx")
@@ -43,7 +42,6 @@ export const LocationProvider = ({ children }) => {
 
                 setPastLocation(location);
                 setLocation(newLocation);
-                setLocationSet(true);
             },
             (error) => {
                 console.error("Error getting location", error);
@@ -51,7 +49,7 @@ export const LocationProvider = ({ children }) => {
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
 
         );
-    }, [location, locationSet, pastLocation]);
+    }, [location, pastLocation]);
 
     return (
         <LocationContext.Provider value={location}>

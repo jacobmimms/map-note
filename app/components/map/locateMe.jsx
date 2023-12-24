@@ -4,20 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocation } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
-export default function LocateMe() {
+export default function LocateMe({ position }) {
     const map = useMap();
     const [disable, setDisable] = useState(false);
 
     function locateUser() {
         setDisable(true);
-        map.locate({
-            setView: true,
-            watch: false,
-            maxZoom: 14,
-        });
-        map.on('locationfound', () => {
-            setDisable(false);
-        });
+        console.log(position)
+        map.setView([position.latitude, position.longitude], 14);
+        setDisable(false);
     }
 
     const disabled = disable ? 'spinner' : 'text-white';

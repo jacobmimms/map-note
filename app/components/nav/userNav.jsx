@@ -38,12 +38,12 @@ export default function UserNav({ session, providers }) {
             </button>
             {toggle && (
                 <DropdownMenu >
-                    <div className="flex flex-row items-center content-center justify-center select-none">
+                    <div className="flex flex-row items-center content-center justify-center select-none w-full h-full">
                         <SigninButton provider={providers.google} />
                     </div>
-                    <div className="fixed top-14 w-[50px] right-[calc(max(30%,200px))] bg-transparent rounded-tr-xl shadow-slate-800 shadow-[25px_0px_0px_0px]">
+                    {/* <div className="fixed top-14 w-[50px] right-[calc(max(30%,250px))] bg-transparent rounded-tr-xl shadow-slate-800 shadow-[25px_0px_0px_0px]">
                         &nbsp;
-                    </div>
+                    </div> */}
                 </DropdownMenu>
             )}
         </div>
