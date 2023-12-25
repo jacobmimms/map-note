@@ -23,20 +23,42 @@ async function getPostsOrderedByProximity(latitude, longitude) {
       FROM "Post"
       ORDER BY distance ASC
     `;
-
     return result;
+}
+
+async function getPostsInBounds(bounds) {
+    console.log(bounds)
+    const posts = await prisma.post.findMany(
+        {
+            where: {
+                latitude: {
+                    gte: bounds._southWest.lat,
+                    lte: bounds._northEast.lat
+                },
+                longitude: {
+                    gte: bounds._southWest.lng,
+                    lte: bounds._northEast.lng
+                },
+            }
+        },
+    );
+    return posts;
 }
 
 
 export async function POST(request) {
     try {
-        const { title, content, latitude, longitude, delete_all, nearby } = await request.json();
+        const { title, content, latitude, longitude, delete_all, nearby, bounds } = await request.json();
         if (delete_all) {
             const result = await prisma.post.deleteMany({});
             return NextResponse.json(result);
         }
         if (nearby) {
             const posts = await getPostsOrderedByProximity(latitude, longitude);
+            return NextResponse.json(posts);
+        }
+        if (bounds) {
+            const posts = await getPostsInBounds(bounds);
             return NextResponse.json(posts);
         }
 
