@@ -37,7 +37,7 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
 }
 
 const ImagePreview = React.memo(
-    ({ file }) => {
+    function ImagePreview({ file }) {
         if (!file) return null;
         return (
             <div className='relative md:h-[200px] md:w-[200px] h-[150px] w-[150px] flex flex-row items-center justify-left bg-transparent p-2 mx-4 rounded-lg'>
