@@ -51,8 +51,7 @@ const ImagePreview = React.memo(
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
     const [location, setLocation] = useState({ latitude: null, longitude: null });
-
-    const isMobile = useMemo(() => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), []);
+    let isMobile = false;
 
     const getLocation = useCallback(() => {
         return new Promise((resolve, reject) => {
@@ -61,6 +60,8 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
     }, []);
 
     useEffect(() => {
+        const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        isMobile = isMobile();
         getLocation().then((position) => {
             setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
         }, (error) => {
