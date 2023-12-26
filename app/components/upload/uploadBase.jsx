@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Loading from '../animations/loading';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -51,7 +51,7 @@ const ImagePreview = React.memo(
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
     const [location, setLocation] = useState({ latitude: null, longitude: null });
-    let isMobile = false;
+    let isMobile = useRef(false);
 
     const getLocation = useCallback(() => {
         return new Promise((resolve, reject) => {
@@ -60,8 +60,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
     }, []);
 
     useEffect(() => {
-        const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        isMobile = isMobile();
+        isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         getLocation().then((position) => {
             setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
         }, (error) => {
@@ -168,7 +167,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                         <FontAwesomeIcon icon={faFile} className="h-6 w-6" />
                     </label>
 
-                    {isMobile &&
+                    {isMobile.current &&
                         <label className='rounded-md  px-4 py-2 hover:cursor-pointer bg-slate-700 hover:shadow-md ' htmlFor="camera-pic">
                             <FontAwesomeIcon icon={faCamera} className="h-6 w-6" />
                         </label>
