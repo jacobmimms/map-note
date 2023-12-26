@@ -49,6 +49,7 @@ async function getPostsInBounds(bounds) {
 export async function POST(request) {
     try {
         const { title, content, latitude, longitude, delete_all, nearby, bounds } = await request.json();
+
         if (delete_all) {
             const result = await prisma.post.deleteMany({});
             return NextResponse.json(result);
