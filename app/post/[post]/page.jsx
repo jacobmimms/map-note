@@ -9,7 +9,6 @@ async function getPostData(post) {
         }
     })
     return postData[0];
-
 }
 
 const url = 'https://mimms-pictures.s3.amazonaws.com/'
@@ -18,6 +17,7 @@ export default async function Page({ params }) {
     const post_name = params.post
     let srcUrl = `${url}${encodeS3Key(post_name)}`
     const post = await getPostData(post_name)
+    console.log(post)
     return (
         <div className='flex flex-col h-full p-4'>
             <div className='relative min-h-[50%] max-h-[80%]'>

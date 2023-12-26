@@ -5,8 +5,25 @@ import { getServerSession } from 'next-auth';
 
 export async function GET(request) {
     try {
-        const rows = await prisma.post.findMany();
-        return NextResponse.json(rows);
+        const posts = await prisma.post.findMany();
+        // for every post, assign the post to the user who created it
+        for (let i = 0; i < posts.length; i++) {
+            const post = posts[i];
+            await prisma.post.update({
+                where: {
+                    id: post.id
+                },
+                data: {
+                    author: {
+                        connect: {
+                            id: post.authorId
+                        }
+                    }
+                }
+            });
+        }
+
+        return NextResponse.json(posts);
 
     } catch (error) {
         console.log(error);
