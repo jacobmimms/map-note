@@ -2,38 +2,29 @@ import Image from 'next/image'
 import { encodeS3Key } from '@/app/utils/main';
 import prisma from '@/lib/prisma';
 
-export async function generateStaticParams() {
-    const posts = await prisma.post.findMany()
-    return posts.map((post) => ({
-        params: {
-            post: post.title,
-        }
-    }))
-}
-
 async function getPostData(post) {
     const postData = await prisma.post.findMany({
         where: {
             title: post
         }
     })
-    return postData[0].content;
+    return postData[0];
 
 }
 
 const url = 'https://mimms-pictures.s3.amazonaws.com/'
 
 export default async function Page({ params }) {
-    const { post } = params;
-    let srcUrl = `${url}${encodeS3Key(post)}`
-    const content = await getPostData(post)
+    const post_name = params.post
+    let srcUrl = `${url}${encodeS3Key(post_name)}`
+    const post = await getPostData(post_name)
     return (
-        <div className="bg-gray-800 min-h-screen flex flex-col items-center justify-center text-white">
-            <div className="bg-gray-700 p-4 rounded shadow-lg">
-                <Image width={300} height={300} src={srcUrl} alt='pop up image' className="rounded" />
+        <div className='flex flex-col h-full p-4'>
+            <div className='relative min-h-[50%] max-h-[80%]'>
+                <Image fill src={srcUrl} alt='pop up image' className=" object-contain" />
             </div>
-            <span className="text-4xl mb-4 bg-gray-700 p-2 rounded">{content}</span>
-
+            <span className="p-4 mt-4 bg-slate-700 rounded-md">{post.content}</span>
         </div>
+
     )
 }
