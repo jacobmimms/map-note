@@ -1,7 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic';
 import UploadComponent from '../components/upload/uploadComponent';
-import { useState } from 'react';
 
 const DynamicMap = dynamic(() => import('../components/map/mapComponent'), {
     ssr: false,

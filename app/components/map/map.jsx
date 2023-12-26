@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
@@ -10,18 +10,15 @@ import LocateMe from './locateMe'
 
 
 function Map() {
+    console.log("rendering map")
     const mapRef = useRef(null);
     const savedLocation = localStorage.getItem('lastLocation');
-    const [loading, setLoading] = useState(true);
     const [position, setPosition] = useState(
         savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
     );
     const params = useSearchParams();
     const latitude = params.get('latitude');
     const longitude = params.get('longitude');
-
-    console.log(latitude, longitude)
-
 
     const handleReady = (e) => {
         console.log("map ready")
@@ -30,9 +27,7 @@ function Map() {
         if (latitude && longitude) {
             console.log("setting view")
             mapRef.current.setView([latitude, longitude], 14);
-
         }
-
         e.target.locate(
             {
                 setView: false,
@@ -41,7 +36,7 @@ function Map() {
                 enableHighAccuracy: true
             }
         );
-        e.target.on('locationfound', (e) => {
+        e.target.once('locationfound', (e) => {
             if (!latitude && !longitude) {
                 mapRef.current.setView(e.latlng, 14);
             }
@@ -51,7 +46,6 @@ function Map() {
         e.target.on('locationerror', (e) => {
             console.log(e);
         });
-        setLoading(false);
     }
 
     if (mapRef.current !== null && location.latitude == 0 && location.longitude == 0) {

@@ -3,15 +3,21 @@ import { useMap } from 'react-leaflet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocation } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import usePosition from './useMapPosition';
 
-export default function LocateMe({ position }) {
+export default function LocateMe() {
+    console.log("LocateMe")
     const map = useMap();
     const [disable, setDisable] = useState(false);
+    const [position, setPosition] = usePosition();
 
     function locateUser() {
         setDisable(true);
-        console.log(position)
-        map.setView([position.latitude, position.longitude], 14);
+        map.setView([position.latitude, position.longitude], 14,
+            {
+                animate: true,
+                duration: .5,
+            });
         setDisable(false);
     }
 
