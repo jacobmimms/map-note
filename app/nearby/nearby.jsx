@@ -1,9 +1,10 @@
 'use client'
 import Loading from '../components/animations/loading';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import PostCard from './postCard';
 import { PostsContext } from '@/app/providers/postsProvider';
-
+import { LocationContext } from '@/app/providers/locationProvider';
+import { calculateDistance } from '@/app/utils/main';
 
 async function getNearbyPosts({ latitude, longitude }) {
     let posts
@@ -22,48 +23,77 @@ async function getNearbyPosts({ latitude, longitude }) {
 
 
 function Nearby() {
-    const [location, setLocation] = useState({ latitude: null, longitude: null });
+    const location = useContext(LocationContext);
     const { state, dispatch } = useContext(PostsContext);
-
-    function getLocation() {
-        return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-    }
+    const [lastLocation, setLastLocation] = useState({ latitude: null, longitude: null });
+    const [sortBy, setSortBy] = useState('proximity');
+    const [posts, setPosts] = useState(state.posts);
 
     useEffect(() => {
-        getLocation().then(
-            (position) => {
-                console.log(position)
-                setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-            }, (error) => {
-                console.error(error);
-            }
-        );
-    }, []);
-
-    useEffect(() => {
-        if (!location || (location.latitude == 0 && location.longitude == 0) || state.posts.length > 0) {
+        if (location.latitude == null && location.longitude == null) {
             return;
         }
-        getNearbyPosts(location).then(
-            (fetchedPosts) => {
-                dispatch({ type: 'SET_POSTS', payload: fetchedPosts });
-            }
+        const distance = calculateDistance(
+            lastLocation.latitude, lastLocation.longitude,
+            location.latitude, location.longitude
         );
+        if (state.posts.length > 0) {
+            return;
+        }
+        if (distance > 100 || lastLocation.latitude === null) {
+            setLastLocation({ latitude: location.latitude, longitude: location.longitude });
+            getNearbyPosts(location).then(fetchedPosts => {
+                dispatch({ type: 'SET_POSTS', payload: fetchedPosts });
+                setPosts(fetchedPosts);
+            });
+        }
+    }, [location, state.posts, dispatch, lastLocation])
 
-    }, [location, state.posts, dispatch])
+    useEffect(() => {
+        if (sortBy === 'proximity') {
+            const sortedByProximity = [...posts].sort((a, b) => a.distance - b.distance);
+            setPosts(sortedByProximity);
+        } else if (sortBy === 'date') {
+            const sortedByDate = [...posts].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            setPosts(sortedByDate);
+        }
+    }, [sortBy])
 
-    if (!location || state.posts == null) {
+
+    if (!location.latitude && !location.longitude) {
+        return (
+            <div className={`flex items-center justify-center w-full h-full bg-slate-700`}>
+                <div className={`flex flex-col items-center justify-center gap-2`}>
+                    <span>
+                        Fetching location...
+                    </span>
+                    <Loading />
+
+                </div>
+            </div>
+        )
+    }
+
+    if (state.posts == null) {
         return (
             <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>
         )
     }
 
     return (
-        <section className='w-full overflow-scroll flex flex-col items-center justify-center'>
+        <section className='w-full overflow-scroll flex flex-col items-center justify-center bg-slate-700 rounded-md'>
+            <div className='relative w-full h-[30px] z-10'>
+                <div className='fixed pl-3 py-1 bg-slate-700 rounded-br-lg rounded-tl-lg'>
+                    sort by:
+                    <select className='bg-slate-700 text-slate-300 h-full text-center' onChange={(e) => setSortBy(e.target.value)}>
+                        <option value='proximity'>proximity</option>
+                        <option value='date'>date</option>
+                    </select>
+                </div>
+            </div>
+
             <div className='w-full flex flex-row flex-wrap items-between justify-around content-center'>
-                {state.posts
+                {posts
                     .map(
                         (post) => (
                             <PostCard key={post.id} post={post} />

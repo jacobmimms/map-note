@@ -66,7 +66,7 @@ export default function UserNav({ session, providers, ...props }) {
                 </div>
             ) : (
                 <button className="w-full h-full" onClick={() => setToggle(!toggle)}>
-                    <div className="flex flex-col h-[60%] justify-center items-center rounded-md bg-slate-800 mx-4">
+                    <div className="flex flex-col h-[60%] justify-center items-center rounded-xl bg-slate-800 mx-4">
                         Sign in
                     </div>
                 </button>

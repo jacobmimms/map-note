@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main'
 import PopupMarker from './popupMarker'
 
+
 export default function Markers() {
     const [posts, setPosts] = useState([])
 
