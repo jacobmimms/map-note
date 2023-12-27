@@ -18,12 +18,12 @@ const DropdownMenu = ({ children, className }) => {
 function DropdownContent({ session, providers }) {
     if (session) {
         return (
-            <>
-                <Link href={`/user/${session.user.email}`} className="hover:bg-slate-800 p-4 flex flex-row h-full w-full items-center justify-center select-none">
+            <div className="flex flex-col gap-2 items-center content-center justify-center select-none w-full h-full">
+                <Link href={`/user/${session.user.email}`} className="bg-slate-700 rounded-md p-2 flex flex-row h-full w-full items-center justify-center select-none">
                     Profile
                 </Link>
                 <SignoutButton />
-            </>
+            </div>
         );
     } else {
         return (

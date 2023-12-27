@@ -14,18 +14,20 @@ function Map() {
     const mapRef = useRef(null);
     const savedLocation = localStorage.getItem('lastLocation');
     const [position, setPosition] = useState(
-        savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
+        savedLocation && Object.keys(savedLocation).length !== 0 ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
     );
+
     const params = useSearchParams();
     const latitude = params.get('latitude');
     const longitude = params.get('longitude');
+
 
     const handleReady = (e) => {
         console.log("map ready")
         mapRef.current = e.target;
 
         if (latitude && longitude) {
-            console.log("setting view")
+            console.log(latitude, longitude)
             mapRef.current.setView([latitude, longitude], 14);
         }
         e.target.locate(
@@ -51,6 +53,7 @@ function Map() {
     if (mapRef.current !== null && location.latitude == 0 && location.longitude == 0) {
         return <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>;
     }
+    console.log(position)
 
     return (
         <MapContainer ref={mapRef} className={`h-full w-full`} center={[position.latitude, position.longitude]} zoom={14} zoomControl={false} scrollWheelZoom={false} tap={false} whenReady={handleReady}>

@@ -11,7 +11,11 @@ export const LocationProvider = ({ children }) => {
     });
 
     const handleSuccess = (position) => {
-        localStorage.setItem('location', JSON.stringify(position));
+        if (!position.coords) {
+            return;
+        }
+        console.log('setting location', position.coords, position)
+        localStorage.setItem('lastLocation', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude }));
         setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -35,10 +39,12 @@ export const LocationProvider = ({ children }) => {
         } else {
             watchId = navigator.geolocation.watchPosition(handleSuccess, handleError);
         }
-        const savedLocation = localStorage.getItem('location');
-        if (savedLocation) {
-            setLocation(JSON.parse(savedLocation));
+        const savedLocation = localStorage.getItem('lastLocation');
+        const savedLocationObj = JSON.parse(savedLocation);
+        if (savedLocationObj) {
+            setLocation(savedLocationObj);
         }
+
         return () => {
             if (watchId) navigator.geolocation.clearWatch(watchId);
         };

@@ -25,7 +25,7 @@ export default async function RootLayout({ children }) {
         <LocationProvider>
           <PostsProvider>
             <SessionProvider session={session}>
-              <div className='w-full  bg-slate-800 h-[calc(100%-60px)] rounded-tr-xl'>
+              <div className='w-full  bg-slate-800 h-[calc(100%-60px)] rounded-tr-xl rounded-tl-md'>
                 <main className='h-[calc(100%-16px)] overflow-scroll  bg-transparent rounded-lg m-2'>
                   {children}
                 </main>
