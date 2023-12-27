@@ -5,7 +5,7 @@ export default function NavLink(props) {
     const pathname = usePathname()
     const isActive = pathname.startsWith(props.href) && props.href.startsWith(pathname)
 
-    let className = isActive ? `rounded-t-xl bg-slate-800 border-stone-500 h-[80%]` : `h-full`
+    let className = isActive ? `rounded-t-xl bg-slate-800 text-slate-400 border-stone-500 h-[80%]` : `h-full text-slate-100`
     let size = `0px`
     return (
         <div className='flex flex-row items-end w-full h-full'>

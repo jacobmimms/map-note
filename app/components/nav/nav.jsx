@@ -11,7 +11,7 @@ export default async function Nav() {
 
     return (
         <div className="ml-1 select-none flex flex-row items-end h-full w-full">
-            <NavLink className={`w-1/4 text-2xl md:text-3xl font-bold text-slate-300`} href='/'>
+            <NavLink className={`w-1/4 text-xl md:text-3xl font-bold text-slate-300`} href='/'>
                 Loc.Pics
             </NavLink>
             <NavLink className={`w-1/4`} href='/nearby'>
