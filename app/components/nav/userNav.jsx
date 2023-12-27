@@ -7,10 +7,9 @@ import { usePathname } from 'next/navigation'
 import Image from "next/image";
 import Link from "next/link";
 
-const DropdownMenu = ({ children, toggle }) => {
-    const dropdownClass = toggle ? 'dropdown-entered' : 'dropdown-exiting';
+const DropdownMenu = ({ children, className }) => {
     return (
-        <div className={`absolute right-0 rounded-bl-xl p-4 bg-slate-800 w-[300%] sm:w-[100%]  ${dropdownClass}`}>
+        <div className={`absolute rounded-bl-xl p-4 bg-slate-800 w-[300%] sm:w-[100%] transition-transform duration-300 ${className}`}>
             {children}
         </div>
     );
@@ -40,11 +39,10 @@ export default function UserNav({ session, providers, ...props }) {
     const dropdownRef = useRef(null);
     const pathname = usePathname()
     useEffect(() => {
-        // if pathname changes, close dropdown
-
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setToggle(false);
+
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
@@ -55,20 +53,21 @@ export default function UserNav({ session, providers, ...props }) {
         setToggle(false);
     }, [pathname]);
 
+    const dropdownClass = toggle ? ' sm:translate-x-0  -translate-x-[66.666666666%]' : 'translate-x-full';
     return (
-        <div ref={dropdownRef} className={`relative select-none ${props.className} h-full`}>
+        <div ref={dropdownRef} className={`relative select-none ${props.className} h-full z-20`}>
             {session ? (
                 <div className="flex flex-row items-center justify-center  hover:cursor-pointer w-full h-full text-xl" onClick={() => setToggle(!toggle)} >
                     {'{'}&nbsp;
                     <Image width={50} height={50} alt='User Image' src={session.user.image} className="rounded-full border-2 border-slate-700" />
-                    &nbsp;{'} '}
+                    &nbsp;{'}'}
                 </div>
             ) : (
                 <button className="hover:bg-slate-700 p-4 flex flex-row h-full w-full items-center justify-center" onClick={() => setToggle(!toggle)}>
                     Sign in
                 </button>
             )}
-            <DropdownMenu toggle={toggle}>
+            <DropdownMenu className={`${dropdownClass}`} toggle={toggle} >
                 <DropdownContent session={session} providers={providers} />
             </DropdownMenu>
         </div>
