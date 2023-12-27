@@ -148,7 +148,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                 </div>
 
                 <textarea
-                    className='h-full w-full rounded-lg p-2 bg-slate-700 '
+                    className='h-full w-full rounded-lg p-2 bg-slate-800 '
                     type='text'
                     id='content'
                     placeholder='Write your thoughts here!'
@@ -163,17 +163,17 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                 </textarea>
 
                 <div className="px-20 w-full flex flex-row justify-around">
-                    <label className='rounded-md px-4 py-2 hover:cursor-pointer bg-slate-700 hover:shadow-md ' htmlFor="file">
+                    <label className='rounded-md px-4 py-2 hover:cursor-pointer bg-slate-800 hover:shadow-md ' htmlFor="file">
                         <FontAwesomeIcon icon={faFile} className="h-6 w-6" />
                     </label>
 
                     {isMobile.current &&
-                        <label className='rounded-md  px-4 py-2 hover:cursor-pointer bg-slate-700 hover:shadow-md ' htmlFor="camera-pic">
+                        <label className='rounded-md  px-4 py-2 hover:cursor-pointer bg-slate-800 hover:shadow-md ' htmlFor="camera-pic">
                             <FontAwesomeIcon icon={faCamera} className="h-6 w-6" />
                         </label>
                     }
 
-                    <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-700' type="submit" disabled={uploading}>
+                    <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-800' type="submit" disabled={uploading}>
                         {
                             !uploading ?
                                 <FontAwesomeIcon icon={faUpload} className="h-6 w-6" /> :

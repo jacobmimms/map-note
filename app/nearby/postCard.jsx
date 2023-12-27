@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function PostCard({ post }) {
     return (
-        <div className='w-[160px] text-xs p-2 m-1 bg-slate-700 rounded-lg z-0'>
+        <div className='w-[160px] text-xs p-2 m-1 bg-slate-800 rounded-lg z-0'>
             <div className='relative w-full h-[140px] '>
                 {post.latitude && post.longitude &&
                     <div className='absolute -top-2 -right-2 z-10'>

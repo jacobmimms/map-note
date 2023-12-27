@@ -1,10 +1,8 @@
 'use client'
-import Image from 'next/image';
 import Loading from '../components/animations/loading';
-import { encodeS3Key, BUCKET_URL } from '@/app/utils/main';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PostCard from './postCard';
-
+import { PostsContext } from '@/app/providers/postsProvider';
 
 
 async function getNearbyPosts({ latitude, longitude }) {
@@ -25,6 +23,7 @@ async function getNearbyPosts({ latitude, longitude }) {
 
 function Nearby() {
     const [location, setLocation] = useState({ latitude: null, longitude: null });
+    const { state, dispatch } = useContext(PostsContext);
 
     function getLocation() {
         return new Promise((resolve, reject) => {
@@ -43,20 +42,19 @@ function Nearby() {
         );
     }, []);
 
-    const [posts, setPosts] = useState(null);
     useEffect(() => {
-        if (!location || (location.latitude == 0 && location.longitude == 0)) {
+        if (!location || (location.latitude == 0 && location.longitude == 0) || state.posts.length > 0) {
             return;
         }
         getNearbyPosts(location).then(
-            (posts) => {
-                setPosts(posts);
+            (fetchedPosts) => {
+                dispatch({ type: 'SET_POSTS', payload: fetchedPosts });
             }
         );
 
-    }, [location])
+    }, [location, state.posts, dispatch])
 
-    if (!location || posts == null) {
+    if (!location || state.posts == null) {
         return (
             <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>
         )
@@ -64,8 +62,8 @@ function Nearby() {
 
     return (
         <section className='w-full overflow-scroll flex flex-col items-center justify-center'>
-            <div className='w-full flex flex-row flex-wrap items-center justify-center pt-2'>
-                {posts
+            <div className='w-full flex flex-row flex-wrap items-between justify-around content-center'>
+                {state.posts
                     .map(
                         (post) => (
                             <PostCard key={post.id} post={post} />
