@@ -148,7 +148,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                 </div>
 
                 <textarea
-                    className='h-full w-full rounded-lg p-2 mb-1 bg-slate-700 '
+                    className='h-full w-full rounded-lg p-2 bg-slate-700 '
                     type='text'
                     id='content'
                     placeholder='Write your thoughts here!'

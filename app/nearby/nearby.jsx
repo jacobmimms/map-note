@@ -64,13 +64,7 @@ function Nearby() {
 
     return (
         <section className='w-full overflow-scroll flex flex-col items-center justify-center'>
-            <h1 className='text-2xl font-bold text-slate-200 bg-slate-600 mt-2'>
-                Nearby Posts
-            </h1>
-            <div className='w-[50%]'>
-                <hr className='my-1' />
-            </div>
-            <div className='w-full flex flex-col flex-wrap items-center justify-center'>
+            <div className='w-full flex flex-row flex-wrap items-center justify-center pt-2'>
                 {posts
                     .map(
                         (post) => (

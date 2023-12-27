@@ -23,7 +23,7 @@ export default async function Page({ params }) {
             <div className='relative min-h-[50%] max-h-[80%]'>
                 <Image fill src={srcUrl} alt='pop up image' className=" object-contain" />
             </div>
-            <span className="p-4 mt-4 bg-slate-700 rounded-md">{post.content}</span>
+            <span className="p-4 bg-slate-700 rounded-md">{post.content}</span>
         </div>
 
     )

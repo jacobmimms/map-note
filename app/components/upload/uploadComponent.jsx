@@ -4,30 +4,6 @@ import UploadBase from './uploadBase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-function DeleteButton() {
-    async function deleteALL() {
-        const delete_all = true;
-        const response = await fetch('/api/posts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ delete_all }),
-        });
-        const rows = await response.json();
-        return rows;
-    }
-    return (
-        <button onClick={() => {
-            if (window.confirm('Are you sure you want to delete all posts?')) {
-                deleteALL();
-            }
-        }}>
-            DELETE ALL
-        </button>
-    )
-}
-
 export default function UploadComponent() {
     const [shelfOpen, setShelfOpen] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -63,7 +39,7 @@ export default function UploadComponent() {
 
 
     const buttonIcon = shelfOpen ? faTimes : faPlus;
-    const shelfClass = shelfOpen ? 'w-full fixed' : 'w-16 hidden';
+    const shelfClass = shelfOpen ? 'translate-y-0' : 'translate-y-full';
 
     return (
         <div className='select-none w-full'>
@@ -83,8 +59,7 @@ export default function UploadComponent() {
                 </div>
             )}
 
-            <div className={`${shelfClass} bg-transparent bottom-0 right-0 rounded-lg shadow-md w-full`}>
-                {/* <DeleteButton /> */}
+            <div className={`fixed ${shelfClass} bg-transparent bottom-0 right-0 rounded-lg shadow-md w-full transition-transform duration-300`}>
                 <UploadBase uploadData={uploadData} setUploadData={setUploadData} toggleShelf={toggleShelf} setFailure={setFailure} setSuccess={setSuccess} />
             </div>
 
