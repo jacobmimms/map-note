@@ -10,14 +10,17 @@ export default async function Nav() {
     const providers = await getProviders()
 
     return (
-        <div className="flex flex-row h-full w-full pl-8">
-            <NavLink className={`w-1/3`} href='/nearby'>
+        <div className="ml-1 select-none flex flex-row items-end h-full w-full">
+            <NavLink className={`w-1/4 text-2xl md:text-3xl font-bold text-slate-300`} href='/'>
+                Loc.Pics
+            </NavLink>
+            <NavLink className={`w-1/4`} href='/nearby'>
                 Nearby
             </NavLink>
-            <NavLink className={`w-1/3`} href='/explore'>
+            <NavLink className={`w-1/4 `} href='/explore'>
                 Explore
             </NavLink>
-            <UserNav className={`w-1/3`} session={session} providers={providers} />
+            <UserNav className={`w-full`} session={session} providers={providers} />
         </div >
     )
 }

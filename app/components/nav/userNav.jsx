@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const DropdownMenu = ({ children, className }) => {
     return (
-        <div className={`absolute rounded-bl-xl p-4 bg-slate-800 w-[300%] sm:w-[100%] transition-transform duration-300 ${className}`}>
+        <div className={`absolute rounded-bl-xl p-4 bg-slate-800 border-slate-700 border-b-2 w-[300%] sm:w-[100%] transition-transform duration-300 ${className}`}>
             {children}
         </div>
     );
@@ -19,7 +19,7 @@ function DropdownContent({ session, providers }) {
     if (session) {
         return (
             <>
-                <Link href={`/user/${session.user.email}`} className="hover:bg-slate-700 p-4 flex flex-row h-full w-full items-center justify-center select-none">
+                <Link href={`/user/${session.user.email}`} className="hover:bg-slate-800 p-4 flex flex-row h-full w-full items-center justify-center select-none">
                     Profile
                 </Link>
                 <SignoutButton />
@@ -54,6 +54,8 @@ export default function UserNav({ session, providers, ...props }) {
     }, [pathname]);
 
     const dropdownClass = toggle ? ' sm:translate-x-0  -translate-x-[66.666666666%]' : 'translate-x-full';
+
+
     return (
         <div ref={dropdownRef} className={`relative select-none ${props.className} h-full z-20`}>
             {session ? (
@@ -63,8 +65,10 @@ export default function UserNav({ session, providers, ...props }) {
                     &nbsp;{'}'}
                 </div>
             ) : (
-                <button className="hover:bg-slate-700 p-4 flex flex-row h-full w-full items-center justify-center" onClick={() => setToggle(!toggle)}>
-                    Sign in
+                <button className="w-full h-full" onClick={() => setToggle(!toggle)}>
+                    <div className="flex flex-col h-[60%] justify-center items-center rounded-md bg-slate-800 mx-4">
+                        Sign in
+                    </div>
                 </button>
             )}
             <DropdownMenu className={`${dropdownClass}`} toggle={toggle} >

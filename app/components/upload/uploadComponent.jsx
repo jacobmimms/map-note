@@ -64,7 +64,7 @@ export default function UploadComponent() {
             </div>
 
             <div className={`fixed bottom-0 right-0 `}>
-                <button onClick={toggleShelf} className="bg-slate-700 text-white rounded-full p-2 w-12 h-12 flex items-center justify-center absolute bottom-4 right-4 z-10">
+                <button onClick={toggleShelf} className="bg-slate-800 text-white rounded-full p-2 w-12 h-12 flex items-center justify-center absolute bottom-4 right-4 z-10">
                     <FontAwesomeIcon icon={buttonIcon} className="h-6 w-6" />
                 </button>
             </div>
