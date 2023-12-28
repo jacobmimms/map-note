@@ -46,7 +46,7 @@ export default function Markers() {
                 setPosts(fetchedPosts);
             });
         }
-    }, [location, postState.posts, dispatch, lastLocation])
+    }, [])
 
     if (posts.length === 0) {
         return null
