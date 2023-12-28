@@ -7,7 +7,6 @@ export default function LocationMarker() {
     const [position, setPosition] = usePosition();
 
     useEffect(() => {
-
         const id = navigator.geolocation.watchPosition((pos) => {
             setPosition({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
         }, (err) => {

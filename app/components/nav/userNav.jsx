@@ -18,16 +18,16 @@ const DropdownMenu = ({ children, className }) => {
 function DropdownContent({ session, providers }) {
     if (session) {
         return (
-            <>
-                <Link href={`/user/${session.user.email}`} className="hover:bg-slate-800 p-4 flex flex-row h-full w-full items-center justify-center select-none">
+            <div className="flex flex-col gap-2 items-center content-center justify-center select-none w-full h-full">
+                <Link href={`/user/${session.user.email}`} className="bg-slate-700 rounded-md p-2 flex flex-row h-full w-full items-center justify-center select-none">
                     Profile
                 </Link>
                 <SignoutButton />
-            </>
+            </div>
         );
     } else {
         return (
-            <div className="flex flex-row items-center content-center justify-center select-none w-full h-full">
+            <div className="flex flex-cols items-center content-center justify-center select-none w-full h-full">
                 <SigninButton provider={providers.google} />
             </div>
         );
@@ -66,7 +66,7 @@ export default function UserNav({ session, providers, ...props }) {
                 </div>
             ) : (
                 <button className="w-full h-full" onClick={() => setToggle(!toggle)}>
-                    <div className="flex flex-col h-[60%] justify-center items-center rounded-md bg-slate-800 mx-4">
+                    <div className="flex flex-col h-[60%] justify-center items-center rounded-xl bg-slate-800 mx-4">
                         Sign in
                     </div>
                 </button>

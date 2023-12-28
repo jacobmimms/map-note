@@ -1,30 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main'
 import PopupMarker from './popupMarker'
+import { PostsContext } from '@/app/providers/postsProvider'
+
 
 export default function Markers() {
-    const [posts, setPosts] = useState([])
+    const { postState, dispatch } = useContext(PostsContext);
 
-    useEffect(() => {
-        async function getPosts() {
-            try {
-                let res = await fetch('/api/posts', { method: 'GET' })
-                let data = await res.json()
-                setPosts(data)
-            }
-            catch (err) {
-                console.error("Error in getPosts for markers", err);
-            }
-        }
-        getPosts()
-    }, [])
-
-    if (posts.length === 0) {
+    if (postState.posts.length === 0) {
         return null
     }
+
     return (
         <>
-            {posts.map((post) => {
+            {postState.posts.map((post) => {
                 return (
                     <PopupMarker
                         key={post.id}
