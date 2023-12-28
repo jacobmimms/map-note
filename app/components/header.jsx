@@ -6,11 +6,8 @@ export default async function Header() {
     return (
         <>
             <div className={`${HEADER_HEIGHT} bg-stone-500`}>
-                <div className={`fixed top-0 w-full z-10 ${HEADER_HEIGHT}`}>
-                    <Nav />
-                </div>
+                <Nav />
             </div>
-
         </>
 
     )

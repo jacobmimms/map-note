@@ -20,15 +20,15 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const { session } = getServerSession(authOptions)
   return (
-    <html lang="en" className={`${noto.className} w-full bg-stone-500`}>
-      <body className='flex flex-col'>
+    <html lang="en" className={`${noto.className} h-full w-full text-slate-300 bg-slate-800 max-w-full overflow-hidden`}>
+      <body className='flex flex-col h-full'>
         <Header />
 
         <LocationProvider>
           <PostsProvider>
             <SessionProvider session={session}>
-              <div className='bg-slate-800 h-[calc(100%-60px)] w-full rounded-tr-md rounded-tl-md'>
-                <main className='h-[calc(100%-16px)] overflow-scroll  bg-transparent rounded-lg m-2'>
+              <div className='bg-slate-800 h-full w-full overflow-y-hidden'>
+                <main className='h-[calc(100%-16px)] overflow-scroll bg-transparent rounded-lg m-2'>
                   {children}
                 </main>
               </div>

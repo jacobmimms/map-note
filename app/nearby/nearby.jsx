@@ -66,18 +66,17 @@ function Nearby() {
     }
 
     return (
-        <section className='w-full overflow-scroll flex flex-col items-center justify-center bg-slate-700 rounded-md z-0'>
-            <div className='relative w-full h-[33px] z-8'>
-                <div className='fixed px-2 py-1 bg-slate-700 rounded-br-lg rounded-tl-lg z-[8]'>
-                    sort by:
-                    <select className='bg-slate-700 text-slate-300 h-full text-center' onChange={(e) => setSortBy(e.target.value)}>
-                        <option value='proximity'>proximity</option>
-                        <option value='date'>date</option>
-                    </select>
-                </div>
+        <section className='w-full flex flex-col bg-slate-700 rounded-md z-0'>
+
+            <div className='fixed top-[60px] bg-slate-800 z-8 rounded-br-md p-2 z-10'>
+                sort by:
+                <select className='bg-slate-800 text-slate-300 h-full text-center' onChange={(e) => setSortBy(e.target.value)}>
+                    <option value='proximity'>proximity</option>
+                    <option value='date'>date</option>
+                </select>
             </div>
 
-            <div className='w-full flex flex-row flex-wrap items-between justify-around content-center z-0'>
+            <div className='pt-[40px] w-full flex flex-row flex-wrap items-between justify-between overflow-scroll content-center z-0'>
                 {posts
                     .map(
                         (post) => (
