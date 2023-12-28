@@ -23,7 +23,6 @@ function postsReducer(state, action) {
 export const PostsProvider = ({ children }) => {
     const [postState, dispatch] = useReducer(postsReducer, initialState);
 
-    // Load posts from localStorage on initial render
     useEffect(() => {
         const savedPosts = localStorage.getItem('posts');
         if (savedPosts) {
@@ -31,7 +30,6 @@ export const PostsProvider = ({ children }) => {
         }
     }, []);
 
-    // Save posts to localStorage whenever they change
     useEffect(() => {
         if (postState.posts.length === 0) {
             return;

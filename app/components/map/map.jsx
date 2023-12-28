@@ -27,7 +27,7 @@ function Map() {
         mapRef.current = e.target;
 
         if (latitude && longitude) {
-            console.log("setting view", latitude, longitude)
+            console.log("setting view")
             mapRef.current.setView([latitude, longitude], 14);
             return;
         }
