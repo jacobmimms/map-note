@@ -29,23 +29,23 @@ function Nearby() {
     const [sortBy, setSortBy] = useState('proximity');
     const [posts, setPosts] = useState(postState.posts);
 
-    useEffect(() => {
-        if (location.latitude == null && location.longitude == null) {
-            console.log('location is null');
-            return;
-        }
-        const distance = calculateDistance(
-            lastLocation.latitude, lastLocation.longitude,
-            location.latitude, location.longitude
-        );
-        if (distance > 100 || lastLocation.latitude === null) {
-            setLastLocation({ latitude: location.latitude, longitude: location.longitude });
-            getNearbyPosts(location).then(fetchedPosts => {
-                dispatch({ type: 'SET_POSTS', payload: fetchedPosts });
-                setPosts(fetchedPosts);
-            });
-        }
-    }, [location, postState.posts, dispatch, lastLocation])
+    // useEffect(() => {
+    //     if (location.latitude == null && location.longitude == null) {
+    //         console.log('location is null');
+    //         return;
+    //     }
+    //     const distance = calculateDistance(
+    //         lastLocation.latitude, lastLocation.longitude,
+    //         location.latitude, location.longitude
+    //     );
+    //     if (distance > 100 || lastLocation.latitude === null) {
+    //         setLastLocation({ latitude: location.latitude, longitude: location.longitude });
+    //         getNearbyPosts(location).then(fetchedPosts => {
+    //             dispatch({ type: 'SET_POSTS', payload: fetchedPosts });
+    //             setPosts(fetchedPosts);
+    //         });
+    //     }
+    // }, [location, postState.posts, dispatch, lastLocation])
 
     const memoProxSort = useMemo(() => {
         return [...posts].sort((a, b) => a.distance - b.distance);
