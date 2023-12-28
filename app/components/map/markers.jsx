@@ -46,7 +46,7 @@ export default function Markers() {
                 setPosts(fetchedPosts);
             });
         }
-    }, [])
+    }, [location, postState.posts, dispatch, lastLocation])
 
     if (posts.length === 0) {
         return null
@@ -69,7 +69,7 @@ export default function Markers() {
 
     return (
         <>
-            {postState.posts.map((post) => {
+            {posts.map((post) => {
                 return (
                     <PopupMarker
                         key={post.id}
