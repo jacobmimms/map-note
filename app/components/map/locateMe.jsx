@@ -8,11 +8,10 @@ import { useContext } from 'react';
 // import useMapPosition from './useMapPosition';
 
 export default function LocateMe() {
-    console.log("LocateMe")
     const map = useMap();
     const [disable, setDisable] = useState(false);
-    // const [position, setPosition] = useMapPosition();
     const position = useContext(LocationContext);
+    const [locatePos, setLocatePos] = useState({ latitude: null, longitude: null });
 
     function locateUser() {
         setDisable(true);
@@ -25,13 +24,11 @@ export default function LocateMe() {
     }
 
     useEffect(() => {
-        // get user location from local storage
         const savedLocation = localStorage.getItem('lastLocation');
         if (savedLocation) {
-            const { latitude, longitude } = JSON.parse(savedLocation);
-            map.setView([latitude, longitude], 14);
+            setLocatePos(JSON.parse(savedLocation));
         }
-    }, [location]);
+    }, []);
 
     const disabled = disable ? 'spinner' : 'text-white';
 

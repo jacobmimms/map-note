@@ -27,7 +27,7 @@ function DropdownContent({ session, providers }) {
         );
     } else {
         return (
-            <div className="flex flex-row items-center content-center justify-center select-none w-full h-full">
+            <div className="flex flex-cols items-center content-center justify-center select-none w-full h-full">
                 <SigninButton provider={providers.google} />
             </div>
         );

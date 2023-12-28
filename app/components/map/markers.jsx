@@ -26,7 +26,7 @@ export default function Markers() {
     const [posts, setPosts] = useState(postState.posts);
     const location = useContext(LocationContext);
     const [lastLocation, setLastLocation] = useState({ latitude: null, longitude: null });
-    console.log(location)
+
     useEffect(() => {
         if (location.latitude == null && location.longitude == null) {
             return;
