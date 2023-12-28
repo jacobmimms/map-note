@@ -38,10 +38,6 @@ function Nearby() {
             lastLocation.latitude, lastLocation.longitude,
             location.latitude, location.longitude
         );
-        if (postState.posts.length > 0) {
-            setPosts(postState.posts);
-            return;
-        }
         if (distance > 100 || lastLocation.latitude === null) {
             setLastLocation({ latitude: location.latitude, longitude: location.longitude });
             getNearbyPosts(location).then(fetchedPosts => {
