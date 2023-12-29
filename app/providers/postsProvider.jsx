@@ -16,26 +16,6 @@ function postsReducer(state, action) {
                 posts: action.payload,
                 loading: false,
             };
-        case 'ADD_POST':
-            return {
-                ...state,
-                posts: [...state.posts, action.payload],
-            };
-        case 'REMOVE_POST':
-            return {
-                ...state,
-                posts: state.posts.filter((post) => post.id !== action.payload),
-            };
-        case 'UPDATE_POST':
-            return {
-                ...state,
-                posts: state.posts.map((post) => {
-                    if (post.id === action.payload.id) {
-                        return action.payload;
-                    }
-                    return post;
-                }),
-            };
         default:
             return state;
     }
@@ -55,7 +35,7 @@ async function getNearbyPosts({ latitude, longitude }) {
     return posts;
 }
 
-function debounce(fn, ms) {
+async function debounce(fn, ms) {
     let timer;
     return () => {
         clearTimeout(timer);
@@ -65,6 +45,8 @@ function debounce(fn, ms) {
         }, ms);
     };
 }
+
+const debouncedGetNearbyPosts = debounce(getNearbyPosts, 5000);
 
 export const PostsProvider = ({ children }) => {
     const location = useContext(LocationContext);
@@ -82,16 +64,9 @@ export const PostsProvider = ({ children }) => {
             return;
         }
         let current_posts;
-
-        debounce(
-            () => {
-                getNearbyPosts(location).then((posts) => {
-                    current_posts = posts;
-                    dispatch({ type: 'SET_POSTS', payload: posts });
-                    localStorage.setItem('posts', JSON.stringify(posts));
-                });
-            }, 5000
-        )
+        debouncedGetNearbyPosts.then((posts) => {
+            current_posts = posts;
+        });
 
         if (current_posts) {
             dispatch({ type: 'SET_POSTS', payload: current_posts });
