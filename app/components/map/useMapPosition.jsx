@@ -14,7 +14,6 @@ export default function useMapPosition() {
         (e) => {
             console.log("moving it arrggh")
             setPosition({ latitude: e.latitude, longitude: e.longitude });
-            localStorage.setItem('lastLocation', JSON.stringify({ latitude: e.latitude, longitude: e.longitude }));
         }
     );
     return [position, setPosition];

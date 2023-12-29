@@ -1,8 +1,8 @@
-import prisma from '@/lib/prisma';
 import { URLSearchParams } from 'url';
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main';
 import Image from 'next/image';
 import Link from 'next/link';
+import prisma from '@/lib/prisma';
 
 
 async function getUserData(user) {

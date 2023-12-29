@@ -8,7 +8,6 @@ import Markers from './markers'
 import LocationMarker from './locationMarker'
 import LocateMe from './locateMe'
 
-
 function Map() {
     console.log("rendering map")
     const mapRef = useRef(null);
@@ -25,13 +24,11 @@ function Map() {
     const handleReady = (e) => {
         console.log("map ready")
         mapRef.current = e.target;
-
         if (latitude && longitude) {
             console.log("setting view")
             mapRef.current.setView([latitude, longitude], 14);
             return;
         }
-
         e.target.locate(
             {
                 setView: false,
@@ -45,7 +42,6 @@ function Map() {
                 mapRef.current.setView(e.latlng, 14);
             }
             setPosition({ latitude: e.latitude, longitude: e.longitude });
-            localStorage.setItem('lastLocation', JSON.stringify({ latitude: e.latitude, longitude: e.longitude }));
         });
         e.target.on('locationerror', (e) => {
             console.error('error in handle ready', e);

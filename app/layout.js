@@ -34,8 +34,6 @@ export default async function RootLayout({ children }) {
             </PostsProvider>
           </LocationProvider>
         </SessionProvider>
-
-
       </body>
     </html>
   )

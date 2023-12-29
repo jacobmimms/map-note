@@ -9,16 +9,16 @@ datasource db {
 }
 
 model Post {
-    id        String   @id
+    id        String   @id @default(cuid())
     title     String
     content   String?
     published Boolean  @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime
+    createdAt DateTime @default(now()) @map(name: "created_at")
+    updatedAt DateTime @updatedAt @map(name: "updated_at")
     latitude  Float?
     longitude Float?
     author    User?    @relation(fields: [authorId], references: [id])
-    authorId  String?
+    authorId  String?  @unique @map("author_id")
     groups    Group[]
 
     @@map(name: "posts")

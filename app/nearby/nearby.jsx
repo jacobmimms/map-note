@@ -31,30 +31,32 @@ function Nearby() {
     }
 
     return (
-        <section className='w-full flex flex-col bg-slate-700 rounded-md z-0'>
 
-            <div className='fixed top-[60px] bg-slate-800 z-8 rounded-br-md p-2 z-10'>
+        <>
+            <div className='fixed top-[60px] bg-slate-700 z-8 rounded-md p-2 mt-1 z-10'>
                 <span className='pr-2'>
                     sort by:
-
                 </span>
-                <select className='bg-slate-800 text-slate-300 h-full text-center' onChange={(e) => setSortBy(e.target.value)}>
+                <select className='bg-slate-700 text-slate-300 h-full text-center' onChange={(e) => setSortBy(e.target.value)}>
                     <option value='proximity'>proximity</option>
                     <option value='date'>date</option>
                 </select>
             </div>
 
-            <div className='pt-[40px] w-full flex flex-row min-h-full flex-wrap items-between justify-around overflow-scroll content-center z-0'>
-                {memoSort
-                    .map(
-                        (post) => (
-                            <PostCard key={post.id} post={post} />
-                        )
-                    )
-                }
-            </div>
+            <section className='w-full flex flex-col bg-slate-800 rounded-md z-0 mt-1'>
 
-        </section>
+                <div className='pt-[40px] w-full flex flex-row min-h-full flex-wrap  overflow-scroll justify-center gap-1'>
+                    {memoSort
+                        .map(
+                            (post) => (
+                                <PostCard key={post.id} post={post} />
+                            )
+                        )
+                    }
+                </div>
+
+            </section>
+        </>
     )
 
 }

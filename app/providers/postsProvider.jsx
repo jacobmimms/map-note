@@ -42,6 +42,10 @@ export const PostsProvider = ({ children }) => {
 
     useEffect(() => {
         const savedPosts = localStorage.getItem('posts');
+        if (typeof savedPosts == "string") {
+            localStorage.setItem('posts', JSON.stringify({}));
+            return
+        }
         console.log('saved posts', savedPosts)
         if (savedPosts) {
             dispatch({ type: 'SET_POSTS', payload: JSON.parse(savedPosts) });
@@ -54,8 +58,12 @@ export const PostsProvider = ({ children }) => {
             return;
         }
         getNearbyPosts(location).then((posts) => {
+            if (posts.length === 0) {
+                return;
+            }
             console.log("got posts,", posts)
             dispatch({ type: 'SET_POSTS', payload: posts });
+
             localStorage.setItem('posts', JSON.stringify(posts));
         });
     }, [location]);
