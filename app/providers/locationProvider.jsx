@@ -18,11 +18,13 @@ export const LocationProvider = ({ children }) => {
         if (lastLocation) {
             const distance = calculateDistance(lastLocation, position.coords);
             if (distance < 10) {
+                console.log('distance is less than 10 meters', distance)
                 return;
             }
         }
         console.log('setting location', position.coords, position)
         localStorage.setItem('lastLocation', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude }));
+        setLastLocation(location)
         setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,

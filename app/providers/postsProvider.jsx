@@ -42,23 +42,22 @@ export const PostsProvider = ({ children }) => {
 
     useEffect(() => {
         const savedPosts = localStorage.getItem('posts');
+        console.log('saved posts', savedPosts)
         if (savedPosts) {
             dispatch({ type: 'SET_POSTS', payload: JSON.parse(savedPosts) });
         }
     }, []);
 
     useEffect(() => {
+        console.log('location changed from posts', location)
         if (!location.latitude && !location.longitude) {
             return;
         }
-        let current_posts;
         getNearbyPosts(location).then((posts) => {
-            current_posts = posts;
+            console.log("got posts,", posts)
+            dispatch({ type: 'SET_POSTS', payload: posts });
+            localStorage.setItem('posts', JSON.stringify(posts));
         });
-        if (current_posts) {
-            dispatch({ type: 'SET_POSTS', payload: current_posts });
-            localStorage.setItem('posts', JSON.stringify(current_posts));
-        }
     }, [location]);
 
     return (
