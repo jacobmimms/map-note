@@ -1,9 +1,10 @@
 'use client'
 import { createContext, useState, useEffect } from 'react';
+import { calculateDistance } from '@/app/utils/main';
 
 export const LocationContext = createContext(null);
-
 export const LocationProvider = ({ children }) => {
+    const [lastLocation, setLastLocation] = useState(null);
     const [location, setLocation] = useState({
         latitude: null,
         longitude: null,
@@ -13,6 +14,12 @@ export const LocationProvider = ({ children }) => {
     const handleSuccess = (position) => {
         if (!position.coords) {
             return;
+        }
+        if (lastLocation) {
+            const distance = calculateDistance(lastLocation, position.coords);
+            if (distance < 10) {
+                return;
+            }
         }
         console.log('setting location', position.coords, position)
         localStorage.setItem('lastLocation', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude }));

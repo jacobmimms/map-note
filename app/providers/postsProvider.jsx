@@ -35,22 +35,10 @@ async function getNearbyPosts({ latitude, longitude }) {
     return posts;
 }
 
-async function debounce(fn, ms) {
-    let timer;
-    return () => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            timer = null;
-            fn.apply(this, arguments);
-        }, ms);
-    };
-}
-
-const debouncedGetNearbyPosts = debounce(getNearbyPosts, 5000);
-
 export const PostsProvider = ({ children }) => {
     const location = useContext(LocationContext);
     const [postState, dispatch] = useReducer(postsReducer, initialState);
+
 
     useEffect(() => {
         const savedPosts = localStorage.getItem('posts');
@@ -64,10 +52,9 @@ export const PostsProvider = ({ children }) => {
             return;
         }
         let current_posts;
-        debouncedGetNearbyPosts.then((posts) => {
+        getNearbyPosts(location).then((posts) => {
             current_posts = posts;
         });
-
         if (current_posts) {
             dispatch({ type: 'SET_POSTS', payload: current_posts });
             localStorage.setItem('posts', JSON.stringify(current_posts));
