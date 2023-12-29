@@ -17,7 +17,7 @@ export const LocationProvider = ({ children }) => {
         }
         if (lastLocation) {
             const distance = calculateDistance(lastLocation, position.coords);
-            if (distance < 10) {
+            if (distance < 50) {
                 console.log('distance is less than 10 meters', distance)
                 return;
             }
@@ -42,7 +42,6 @@ export const LocationProvider = ({ children }) => {
 
     useEffect(() => {
         let watchId;
-
         if (!navigator.geolocation) {
             setLocation({ latitude: null, longitude: null, error: "Geolocation is not supported by your browser" });
         } else {
