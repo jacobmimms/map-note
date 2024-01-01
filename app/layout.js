@@ -1,5 +1,4 @@
 import { Noto_Sans } from 'next/font/google'
-
 import './globals.css'
 import Header from './components/header'
 import SessionProvider from '@/app/providers/sessionProvider'
@@ -7,8 +6,6 @@ import { PostsProvider } from '@/app/providers/postsProvider'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { LocationProvider } from '@/app/providers/locationProvider';
-import Head from 'next/head'
-
 
 const noto = Noto_Sans({ subsets: ['latin'], variants: ['regular', 'bold'], weights: [400, 700] })
 

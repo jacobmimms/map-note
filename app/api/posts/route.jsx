@@ -21,7 +21,7 @@ async function getPostsOrderedByProximity(latitude, longitude) {
         ll_to_earth(${latitude}, ${longitude}),
         ll_to_earth("latitude", "longitude")
       ) as distance
-      FROM "Post"
+      FROM "posts"
       ORDER BY distance ASC
     `;
     return result;
