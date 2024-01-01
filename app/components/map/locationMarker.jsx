@@ -10,7 +10,7 @@ export default function LocationMarker() {
         const id = navigator.geolocation.watchPosition((pos) => {
             setPosition({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
         }, (err) => {
-            console.log(err);
+            console.error("error in location marker", err);
         }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 20000 });
         return () => {
             navigator.geolocation.clearWatch(id);

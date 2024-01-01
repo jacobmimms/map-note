@@ -1,9 +1,10 @@
 'use client'
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useContext, useRef } from "react";
 import Loading from '../animations/loading';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faUpload, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { LocationContext } from '@/app/providers/locationProvider';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
@@ -12,28 +13,26 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const post = { content, latitude, longitude, title };
     let postResponse;
     try {
-        postResponse = await fetch('/api/posts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(post),
-        });
+        postResponse = await fetch('/api/posts',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(post),
+            }
+        );
     } catch (error) {
-        console.error(error);
+        console.error("error uploading to postgres", error);
     }
-    if (postResponse?.ok) {
-        if (postResponse.redirected) {
-            console.log('Redirected to login page.');
-            setFailure(true);
-            return;
-        }
-        console.log('Post uploaded to database.');
+
+    if (postResponse?.ok && !postResponse.redirected) {
         setSuccess(true);
     } else {
         console.error('Post upload error:', postResponse);
         setFailure(true);
     }
+
 }
 
 const ImagePreview = React.memo(
@@ -47,26 +46,41 @@ const ImagePreview = React.memo(
     }
 );
 
+async function getSignedUrl(uploadData) {
+    const id = `${Date.now()}${uploadData.file.name}`;
+    const response = await fetch('/api/upload',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ filename: id, contentType: uploadData.file.type }),
+        }
+    )
+    return response;
+}
+
+async function uploadFile(response, uploadData) {
+    const { url, fields } = await response.json()
+    const formData = new FormData()
+    Object.entries({ ...fields, file }).forEach(([key, value]) => {
+        formData.append(key, value)
+    })
+    formData.delete('file')
+    formData.append('file', uploadData.file)
+
+    const uploadResponse = await fetch(url, {
+        method: 'POST',
+        body: formData,
+    })
+    return uploadResponse;
+}
+
 
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
-    const [location, setLocation] = useState({ latitude: null, longitude: null });
+    const location = useContext(LocationContext);
     let isMobile = useRef(false);
-
-    const getLocation = useCallback(() => {
-        return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-    }, []);
-
-    useEffect(() => {
-        isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        getLocation().then((position) => {
-            setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-        }, (error) => {
-            console.error(error);
-        });
-    }, [getLocation]);
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault()
@@ -75,40 +89,17 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
             return
         }
         try {
-            const id = `${Date.now()}${uploadData.file.name}`;
             setUploading(true)
-            const response = await fetch('/api/upload',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ filename: id, contentType: uploadData.file.type }),
-                }
-            )
+            const response = await getSignedUrl(uploadData)
             if (response.ok) {
-                console.log('S3 Upload Success:', response)
-                const { url, fields } = await response.json()
-                const formData = new FormData()
-                Object.entries({ ...fields, file }).forEach(([key, value]) => {
-                    formData.append(key, value)
-                })
-                formData.delete('file')
-                formData.append('file', uploadData.file)
-
-                const uploadResponse = await fetch(url, {
-                    method: 'POST',
-                    body: formData,
-                })
-                if (!uploadResponse.ok) {
+                const uploadResponse = await uploadFile(response, uploadData)
+                if (uploadResponse.ok) {
+                    updateSqlDatabase(location, uploadData.text, id, setSuccess, setFailure);
+                } else {
                     console.error('S3 Upload Error:', uploadResponse)
                     setFailure(true)
+                    setUploading(false)
                 }
-
-                updateSqlDatabase(location, uploadData.text, id, setSuccess, setFailure);
-
-            } else {
-                alert('Failed to get pre-signed URL.')
             }
         } catch (error) {
             console.error(error)
@@ -173,7 +164,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                         </label>
                     }
 
-                    <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-800' type="submit" disabled={uploading}>
+                    <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-800 text-slate-300' type="submit" disabled={uploading}>
                         {
                             !uploading ?
                                 <FontAwesomeIcon icon={faUpload} className="h-6 w-6" /> :

@@ -1,47 +1,72 @@
 import { URLSearchParams } from 'url';
-import { encodeS3Key, BUCKET_URL } from '@/app/utils/main';
-import Image from 'next/image';
-import Link from 'next/link';
 import prisma from '@/lib/prisma';
+import GroupInterface from './groupInterface';
+import UserPosts from './userPosts';
+import GroupInfo from './groupInfo';
 
-
-async function getUserData(user) {
+async function getUserData(userEmail) {
     const userData = await prisma.user.findMany({
         where: {
-            email: user
+            email: userEmail
         },
-        include: { posts: true },
+        include: {
+            posts: true,
+        },
+
     })
     return userData[0];
-
 }
 
-export default async function UserPage({ params }) {
-    const { user } = params
-    const email = new URLSearchParams(user).keys().next().value
-    const userData = await getUserData(email)
+
+function UserHeader({ userData }) {
     return (
-        <div className="flex flex-col w-full h-full justify-start items-start gap-2">
+        <div>
             <h1 className='text-3xl w-full text-center'>
                 {userData.name}
             </h1>
             <h2 className='text-md w-full text-center'>
                 {userData.email}
             </h2>
-            <div className='flex flex-row flex-wrap justify-center w-full'>
-                {userData.posts.map((post) => (
-                    <div key={post.id} className='relative w-[150px] h-[100px]   md:w-[250px] md:h-[200px]'>
-                        <Link href={`/post/${post.title}`}>
-                            <Image
-                                fill
-                                className=' object-cover rounded-md'
-                                src={`${BUCKET_URL}${encodeS3Key(post.title)}`}
-                                alt={`${post.content ? post.content : 'Post'}`}
-                            />
-                        </Link>
-                    </div>
-                ))}
-            </div>
+        </div>
+    )
+}
+
+async function GroupInformation({ userId }) {
+    const userGroups = await prisma.group.findMany({
+        where: {
+            ownerId: userId
+        },
+        include: {
+            posts: true
+        }
+    })
+
+    return (
+        <div>
+            <h1>My Groups</h1>
+            <section className='w-full flex flex-col'>
+                {
+                    userGroups && userGroups.map(group => {
+                        return (
+                            <GroupInfo key={group.id} group={group} />
+                        )
+                    })
+                }
+            </section>
+        </div>
+    )
+}
+
+export default async function UserPage({ params }) {
+    const { user } = params
+    const email = new URLSearchParams(user).keys().next().value
+    const userData = await getUserData(email);
+    return (
+        <div className="flex flex-col w-full h-full justify-start items-start gap-2">
+            <UserHeader userData={userData} />
+            <UserPosts posts={userData.posts} />
+            <GroupInformation />
+            <GroupInterface />
         </div>
     )
 }

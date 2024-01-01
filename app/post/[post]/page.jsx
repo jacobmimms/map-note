@@ -33,9 +33,6 @@ export default function Page({ params }) {
                         alt={`${post.content ? post.content : 'Post'}`}
                     />
                 </div>
-                {/* <span className='text-slate-300 text-xs w-[100px] h-[20px]'>
-                    {user}
-                </span> */}
                 <div className='justify-center bg-slate-700 p-2  rounded-lg content-center items-center flex flex-row flex-1 w-full h-full sm:w-[80%]'>
                     <div className='w-[50%] sm:w-[30%] h-full'>
 
@@ -54,11 +51,11 @@ export default function Page({ params }) {
                                 </div>
                             </div>
                         }
-                        {post.created_at &&
+                        {post.createdAt &&
                             <div className='group'>
                                 <div className='flex flex-row items-center justify-center bg-slate-300 text-slate-600 rounded-md border-slate-700 border-2 p-1'>
                                     <FontAwesomeIcon icon={faCalendarAlt} className="h-6 w-6" />
-                                    <span className='pl-1 group-hover:block hidden'>{new Date(post.created_at).toLocaleDateString()}</span>
+                                    <span className='pl-1 group-hover:block hidden'>{new Date(post.createdAt).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         }

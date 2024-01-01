@@ -3,8 +3,9 @@ import { createContext, useState, useEffect } from 'react';
 import { calculateDistance } from '@/app/utils/main';
 
 export const LocationContext = createContext(null);
+
 export const LocationProvider = ({ children }) => {
-    const [lastLocation, setLastLocation] = useState(null);
+    const [lastLocation, setLastLocation] = useState({ latitude: 0, longitude: 0 });
     const [location, setLocation] = useState({
         latitude: null,
         longitude: null,
@@ -15,21 +16,18 @@ export const LocationProvider = ({ children }) => {
         if (!position.coords) {
             return;
         }
-        if (lastLocation) {
-            const distance = calculateDistance(lastLocation, position.coords);
-            if (distance < 50) {
-                console.log('distance is less than 10 meters', distance)
-                return;
-            }
+        const distance = calculateDistance(lastLocation.latitude, lastLocation.longitude, position.coords.latitude, position.coords.longitude);
+        if (distance > 10) {
+            localStorage.setItem('lastLocation', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude }));
+            setLastLocation({ latitude: location.latitude, longitude: location.longitude })
+            setLocation({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                error: null
+            });
+        } else {
+            console.log('not setting location')
         }
-        console.log('setting location', position.coords, position)
-        localStorage.setItem('lastLocation', JSON.stringify({ latitude: position.coords.latitude, longitude: position.coords.longitude }));
-        setLastLocation(location)
-        setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            error: null
-        });
     };
 
     const handleError = (error) => {
@@ -47,16 +45,9 @@ export const LocationProvider = ({ children }) => {
         } else {
             watchId = navigator.geolocation.watchPosition(handleSuccess, handleError);
         }
-        const savedLocation = localStorage.getItem('lastLocation');
-        const savedLocationObj = JSON.parse(savedLocation);
-        if (savedLocationObj) {
-            setLocation(savedLocationObj);
-        }
-
         return () => {
             if (watchId) navigator.geolocation.clearWatch(watchId);
         };
-
     }, []);
 
     return (
