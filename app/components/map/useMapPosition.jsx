@@ -12,7 +12,6 @@ export default function useMapPosition() {
     map.once(
         'locationfound',
         (e) => {
-            console.log("moving it arrggh")
             setPosition({ latitude: e.latitude, longitude: e.longitude });
         }
     );

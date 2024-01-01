@@ -31,7 +31,6 @@ function Nearby() {
     }
 
     return (
-
         <>
             <div className='fixed top-[60px] bg-slate-700 z-8 rounded-md p-2 mt-1 z-10'>
                 <span className='pr-2'>

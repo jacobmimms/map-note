@@ -28,7 +28,6 @@ export const LocationProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("useEffect in location.jsx")
         if (getDistance(location, pastLocation) < MIN_DISTANCE) {
             "location is the same as past location"
             return;

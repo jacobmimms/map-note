@@ -9,7 +9,6 @@ import LocationMarker from './locationMarker'
 import LocateMe from './locateMe'
 
 function Map() {
-    console.log("rendering map")
     const mapRef = useRef(null);
     const savedLocation = localStorage.getItem('lastLocation');
     const [position, setPosition] = useState(
@@ -22,10 +21,8 @@ function Map() {
 
 
     const handleReady = (e) => {
-        console.log("map ready")
         mapRef.current = e.target;
         if (latitude && longitude) {
-            console.log("setting view")
             mapRef.current.setView([latitude, longitude], 14);
             return;
         }

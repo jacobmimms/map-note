@@ -10,7 +10,6 @@ export default function Markers() {
     if (postState.posts.length === 0) {
         return null
     }
-
     return (
         <>
             {postState.posts.map((post) => {
