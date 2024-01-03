@@ -18,7 +18,11 @@ export function decodeS3Key(key) {
     }
 }
 
-export function calculateDistance(lat1, lon1, lat2, lon2) {
+export function calculateDistance(p1, p2) {
+    const { latitude: lat1, longitude: lon1 } = p1;
+    const { latitude: lat2, longitude: lon2 } = p2;
+
+
     // calculates distance between two lat/lon pairs in meters
     const R = 6371e3; // Earth radius in meters
     const rad = Math.PI / 180;

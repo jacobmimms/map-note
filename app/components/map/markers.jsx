@@ -14,6 +14,7 @@ export default function Markers() {
     return (
         <>
             {postState.posts.map((post) => {
+                if (!post.latitude || !post.longitude) return null;
                 return (
                     <PopupMarker
                         key={post.id}

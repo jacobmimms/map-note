@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useReducer, useEffect, useContext } from 'react';
 import { LocationContext } from './locationProvider';
+import Loading from '@/app/components/animations/loading';
 export const PostsContext = createContext();
 
 const initialState = {
@@ -53,20 +54,21 @@ export const PostsProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        console.log('location changed from posts', location)
-        if (!location.latitude && !location.longitude) {
-            return;
-        }
         getNearbyPosts(location).then((posts) => {
             if (posts.length === 0) {
                 return;
             }
-            console.log("got posts,", posts)
             dispatch({ type: 'SET_POSTS', payload: posts });
 
             localStorage.setItem('posts', JSON.stringify(posts));
         });
     }, [location]);
+
+    if (postState.loading) {
+        return (
+            <Loading className='fixed w-[80px] h-[80px] inset-x-0 mx-auto inset-y-0 my-auto p-2 rounded-full' />
+        )
+    }
 
     return (
         <PostsContext.Provider value={{ postState, dispatch }}>
