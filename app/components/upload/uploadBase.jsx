@@ -1,9 +1,10 @@
 'use client'
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
 import Loading from '../animations/loading';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faUpload, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { LocationContext } from '@/app/providers/locationProvider';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
@@ -50,28 +51,33 @@ const ImagePreview = React.memo(
 
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
-    const [location, setLocation] = useState({ latitude: null, longitude: null });
+    // const [location, setLocation] = useState({ latitude: null, longitude: null });
+    const location = useContext(LocationContext);
     let isMobile = useRef(false);
 
-    const getLocation = useCallback(() => {
-        return new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-    }, []);
+    // const getLocation = useCallback(() => {
+    //     return new Promise((resolve, reject) => {
+    //         navigator.geolocation.getCurrentPosition(resolve, reject);
+    //     });
+    // }, []);
 
-    useEffect(() => {
-        isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        getLocation().then((position) => {
-            setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-        }, (error) => {
-            console.error(error);
-        });
-    }, [getLocation]);
+    // useEffect(() => {
+    //     isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    //     getLocation().then((position) => {
+    //         setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+    //     }, (error) => {
+    //         console.error(error);
+    //     });
+    // }, [getLocation]);
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault()
         if (!uploadData.file) {
             alert('Please select a file to upload.')
+            return
+        }
+        if (location.latitude == null || location.longitude == null) {
+            alert('Please enable location services to upload.')
             return
         }
         try {

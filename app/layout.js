@@ -18,7 +18,7 @@ export default async function RootLayout({ children }) {
   const { session } = getServerSession(authOptions)
   return (
     <html lang="en" className={`${noto.className} h-full w-full text-slate-300 bg-slate-800 max-w-full overflow-hidden`}>
-      <body className='flex flex-col h-full overflow-x-hidden'>
+      <body className='flex flex-col w-full h-full overflow-x-hidden'>
         <Header />
         <SessionProvider session={session}>
           <LocationProvider>

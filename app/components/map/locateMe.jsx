@@ -5,7 +5,6 @@ import { faLocation } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import { LocationContext } from '@/app/providers/locationProvider';
 import { useContext } from 'react';
-// import useMapPosition from './useMapPosition';
 
 export default function LocateMe() {
     const map = useMap();

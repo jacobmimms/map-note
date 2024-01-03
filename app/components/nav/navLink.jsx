@@ -9,7 +9,6 @@ export default function NavLink(props) {
     return (
         <div className='nav-link flex flex-row items-end w-full h-full'>
             <Link {...props} className={`${className} ${props.className} w-full relative`}>
-
                 <div className='flex flex-row justify-center items-center w-full h-full'>
                     {props.children}
                 </div>

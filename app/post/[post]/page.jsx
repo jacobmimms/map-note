@@ -8,17 +8,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faRulerHorizontal } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import prisma from '@/lib/prisma';
-
+import Loading from '@/app/components/animations/loading';
 
 export default function Page({ params }) {
-    const post_name = params.post
+    const post_name = decodeURIComponent(params.post).replace(/\+/g, ' ')
+    console.log('post_name', post_name)
     const { postState, dispatch } = useContext(PostsContext);
     const post = postState.posts.find(post => post.title === post_name)
 
     if (!post) {
         return (
-            <div className={`flex items-center justify-center w-full h-full bg-slate-600`}>Post not found</div>
+            <div className={`flex items-center justify-center w-full h-full bg-slate-600`}>
+                <Loading />
+            </div>
         )
     }
 
