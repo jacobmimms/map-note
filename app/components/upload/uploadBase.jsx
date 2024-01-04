@@ -1,9 +1,9 @@
 'use client'
-import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import Loading from '../animations/loading';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faUpload, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { LocationContext } from '@/app/providers/locationProvider';
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
@@ -51,29 +51,13 @@ const ImagePreview = React.memo(
 
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
-    // const [location, setLocation] = useState({ latitude: null, longitude: null });
     const location = useContext(LocationContext);
-    let isMobile = useRef(false);
-
-    // const getLocation = useCallback(() => {
-    //     return new Promise((resolve, reject) => {
-    //         navigator.geolocation.getCurrentPosition(resolve, reject);
-    //     });
-    // }, []);
-
-    // useEffect(() => {
-    //     isMobile.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    //     getLocation().then((position) => {
-    //         setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-    //     }, (error) => {
-    //         console.error(error);
-    //     });
-    // }, [getLocation]);
+    const [toggle, setToggle] = useState(false);
 
     const handleSubmit = useCallback(async (e) => {
         e.preventDefault()
         if (!uploadData.file) {
-            alert('Please select a file to upload.')
+            showPopup()
             return
         }
         if (location.latitude == null || location.longitude == null) {
@@ -136,11 +120,29 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
     }, [uploadData, setUploadData]);
 
 
-    return (
-        <div className="flex flex-col justify-between items-start pb-5">
-            <ImagePreview file={uploadData.file} />
-            <form className='w-full px-4' onSubmit={handleSubmit}>
+    const dropdownClass = toggle ? 'translate-y-0 scale-100' : 'translate-y-[300%] scale-50';
 
+
+    const showPopup = () => {
+        setToggle(true);
+
+        setTimeout(
+            () => {
+                setToggle(false);
+            }
+            , 2000);
+    }
+
+
+    return (
+        <div className="flex flex-col justify-between items-start pb-[18px]">
+            <div className={`${dropdownClass} fixed transition-transform duration-300  w-[80%] -top-20 bg-red-500 h-20 inset-x-0 mx-auto rounded-lg`}>
+                <div className="flex flex-row justify-center items-center h-full">
+                    <p className="text-white text-center">Please select a file to upload.</p>
+                </div>
+            </div>
+            <ImagePreview file={uploadData.file} />
+            <form className='flex flex-col items-center justify-center w-full px-4' onSubmit={handleSubmit}>
                 <div className="flex flex-row items-center justify-left w-full h-full p-1">
                     <input
                         className='hidden'
@@ -150,7 +152,6 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                         accept="image/png, image/jpeg"
                     />
                     <input id='camera-pic' type="file" accept="image/*" capture="camera" className="hidden" onChange={setFile}></input>
-
                 </div>
 
                 <textarea
@@ -168,23 +169,16 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                 >
                 </textarea>
 
-                <div className="px-20 w-full flex flex-row justify-around">
-                    <label className='rounded-md px-4 py-2 hover:cursor-pointer bg-slate-800 hover:shadow-md ' htmlFor="file">
-                        <FontAwesomeIcon icon={faFile} className="h-6 w-6" />
+                <div className="pt-2 w-full px-16 sm:w-[50%] xl:w-[30%] flex flex-row justify-center gap-2">
+                    <label className='block rounded-md w-full p-2 hover:cursor-pointer bg-slate-800 hover:bg-slate-600  hover:active:bg-slate-700 hover:text-white' htmlFor="camera-pic">
+                        <FontAwesomeIcon icon={faCamera} className="h-6 w-full" />
                     </label>
 
-                    {isMobile.current &&
-                        <label className='rounded-md  px-4 py-2 hover:cursor-pointer bg-slate-800 hover:shadow-md ' htmlFor="camera-pic">
-                            <FontAwesomeIcon icon={faCamera} className="h-6 w-6" />
-                        </label>
-                    }
-
-                    <button className='block rounded-md hover:cursor-pointer min-w-fit px-4 py-2 bg-slate-800' type="submit" disabled={uploading}>
+                    <button className='block rounded-md hover:cursor-pointer w-full p-2 bg-slate-800 hover:bg-slate-600 hover:active:bg-slate-700 hover:text-white' type="submit" disabled={uploading}>
                         {
                             !uploading ?
-                                <FontAwesomeIcon icon={faUpload} className="h-6 w-6" /> :
-                                <Loading />
-
+                                <FontAwesomeIcon icon={faUpload} className="h-6 w-full" /> :
+                                <Loading className={'h-6 w-6'} />
                         }
                     </button>
                 </div>
