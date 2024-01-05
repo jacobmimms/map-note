@@ -56,11 +56,11 @@ export default function Page({ params }) {
                                 </div>
                             </div>
                         }
-                        {post.createdAt &&
+                        {post.created_at &&
                             <div className='group'>
                                 <div className='flex flex-row items-center justify-center bg-slate-300 text-slate-600 rounded-md border-slate-700 border-2 p-1'>
                                     <FontAwesomeIcon icon={faCalendarAlt} className="h-6 w-6" />
-                                    <span className='pl-1 group-hover:block hidden'>{new Date(post.createdAt).toLocaleDateString()}</span>
+                                    <span className='pl-1 group-hover:block hidden'>{new Date(post.created_at).toLocaleDateString()}</span>
                                 </div>
                             </div>
                         }

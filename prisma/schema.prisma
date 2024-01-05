@@ -18,7 +18,7 @@ model Post {
   latitude  Float?
   longitude Float?
   author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?  @unique @map("author_id")
+  authorId  String?  @map("author_id")
   groups    Group[]
 
   @@map(name: "posts")

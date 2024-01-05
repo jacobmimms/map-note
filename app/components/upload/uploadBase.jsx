@@ -178,7 +178,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                         {
                             !uploading ?
                                 <FontAwesomeIcon icon={faUpload} className="h-6 w-full" /> :
-                                <Loading className={'h-6 w-6'} />
+                                <Loading className={'h-6 w-full'} />
                         }
                     </button>
                 </div>
