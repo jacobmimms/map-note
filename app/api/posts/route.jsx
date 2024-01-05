@@ -49,13 +49,9 @@ async function getPostsInBounds(bounds) {
 
 export async function POST(request) {
     try {
-        const { title, content, latitude, longitude, delete_all, nearby } = await request.json();
-        console.log(nearby, "nearby")
-        if (delete_all) {
-            const result = await prisma.post.deleteMany({});
-            return NextResponse.json(result);
-        }
+        const { title, content, latitude, longitude, nearby } = await request.json();
         if (nearby) {
+            console.log("nearby")
             const posts = await getPostsOrderedByProximity(latitude, longitude);
             return NextResponse.json(posts);
         }
@@ -71,7 +67,6 @@ export async function POST(request) {
             }
         });
         const userId = user.id;
-
 
         const result = await prisma.post.create({
             data: {

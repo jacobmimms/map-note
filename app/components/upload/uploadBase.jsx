@@ -120,7 +120,7 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
     }, [uploadData, setUploadData]);
 
 
-    const dropdownClass = toggle ? 'translate-y-0 scale-100' : 'translate-y-[300%] scale-50';
+    const dropdownClass = toggle ? 'translate-y-0 scale-100' : 'translate-y-[300%] scale-0';
 
 
     const showPopup = () => {

@@ -55,11 +55,7 @@ export const PostsProvider = ({ children }) => {
 
     useEffect(() => {
         getNearbyPosts(location).then((posts) => {
-            if (posts.length === 0) {
-                return;
-            }
             dispatch({ type: 'SET_POSTS', payload: posts });
-
             localStorage.setItem('posts', JSON.stringify(posts));
         });
     }, [location]);
