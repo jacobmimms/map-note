@@ -5,9 +5,26 @@ import NavLink from './navLink'
 import UserNav from "./userNav"
 import React from "react"
 
-export default async function Nav() {
+
+export async function getServerSideProps() {
     const session = await getServerSession(authOptions)
     const providers = await getProviders()
+    console.log("session", session)
+    console.log("providers", providers)
+    return {
+        props: {
+            session,
+            providers
+        }
+    }
+}
+
+
+export default async function Nav({session, providers}) {
+    console.log("session", session)
+    console.log("providers", providers)
+    // const session = await getServerSession(authOptions)
+    // const providers = await getProviders()
 
     return (
         <div className="ml-1 select-none flex flex-row items-end h-full w-full">
