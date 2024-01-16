@@ -9,13 +9,12 @@ export async function GET(request) {
         return NextResponse.json(posts);
 
     } catch (error) {
-        console.log(error);
+        console.error("error in get", error);
         return NextResponse.error(error);
     }
 }
 
 async function getPostsOrderedByProximity(latitude, longitude) {
-    console.log(latitude, longitude)
     const result = await prisma.$queryRaw`
       SELECT *, earth_distance(
         ll_to_earth(${latitude}, ${longitude}),
@@ -28,7 +27,6 @@ async function getPostsOrderedByProximity(latitude, longitude) {
 }
 
 async function getPostsInBounds(bounds) {
-    console.log(bounds)
     const posts = await prisma.post.findMany(
         {
             where: {
@@ -79,7 +77,7 @@ export async function POST(request) {
         });
         return NextResponse.json(result);
     } catch (error) {
-        console.log(error);
+        console.error("error in postPost", error);
         return NextResponse.error(error);
     }
 }

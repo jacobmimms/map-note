@@ -25,11 +25,9 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     }
     if (postResponse?.ok) {
         if (postResponse.redirected) {
-            console.log('Redirected to login page.');
             setFailure(true);
             return;
         }
-        console.log('Post uploaded to database.');
         setSuccess(true);
     } else {
         console.error('Post upload error:', postResponse);

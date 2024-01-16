@@ -35,7 +35,6 @@ export const LocationProvider = ({ children }) => {
             };
 
             if (!locationState.location || calculateDistance(locationState.location, newLocation) >= 50) {
-                console.log('updating location')
                 localStorage.setItem('lastLocation', JSON.stringify(newLocation));
                 dispatch({ type: 'UPDATE_LOCATIONS', payload: newLocation });
             }

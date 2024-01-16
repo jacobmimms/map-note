@@ -12,7 +12,6 @@ import Loading from '@/app/components/animations/loading';
 
 export default function Page({ params }) {
     const post_name = decodeURIComponent(params.post).replace(/\+/g, ' ')
-    console.log('post_name', post_name)
     const { postState, dispatch } = useContext(PostsContext);
     const post = postState.posts.find(post => post.title === post_name)
 
