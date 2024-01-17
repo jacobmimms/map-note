@@ -1,10 +1,10 @@
 'use client'
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback } from "react";
 import Loading from '../animations/loading';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload, faCamera } from '@fortawesome/free-solid-svg-icons';
-import { LocationContext } from '@/app/providers/locationProvider';
+import { useLocationAndPosts } from "@/app/providers/locationAndPosts";
 
 async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     const { latitude, longitude } = location;
@@ -25,11 +25,9 @@ async function updateSqlDatabase(location, text, id, setSuccess, setFailure) {
     }
     if (postResponse?.ok) {
         if (postResponse.redirected) {
-            console.log('Redirected to login page.');
             setFailure(true);
             return;
         }
-        console.log('Post uploaded to database.');
         setSuccess(true);
     } else {
         console.error('Post upload error:', postResponse);
@@ -51,7 +49,7 @@ const ImagePreview = React.memo(
 
 export default function UploadBase({ uploadData, setUploadData, toggleShelf, setFailure, setSuccess }) {
     const [uploading, setUploading] = useState(false)
-    const location = useContext(LocationContext);
+    const { location } = useLocationAndPosts();
     const [toggle, setToggle] = useState(false);
 
     const handleSubmit = useCallback(async (e) => {
@@ -77,7 +75,6 @@ export default function UploadBase({ uploadData, setUploadData, toggleShelf, set
                 }
             )
             if (response.ok) {
-                console.log('S3 Upload Success:', response)
                 const { url, fields } = await response.json()
                 const formData = new FormData()
                 Object.entries({ ...fields, file }).forEach(([key, value]) => {

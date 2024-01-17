@@ -1,14 +1,12 @@
 'use client'
 import Loading from '@/app/components/animations/loading';
-import { useContext, useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import PostCard from './postCard';
-import { PostsContext } from '@/app/providers/postsProvider';
+import { useLocationAndPosts } from '@/app/providers/locationAndPosts';
 
 function Nearby() {
-    const { postState, dispatch } = useContext(PostsContext);
     const [sortBy, setSortBy] = useState('proximity');
-    const [posts, setPosts] = useState(postState.posts);
-
+    const { posts, loading } = useLocationAndPosts();
     const memoSort = useMemo(() => {
         if (sortBy === 'proximity') {
             return [...posts].sort((a, b) => a.distance - b.distance);
@@ -18,20 +16,14 @@ function Nearby() {
         }
     }, [posts, sortBy]);
 
-    useEffect(() => {
-        if (postState.posts.length) {
-            setPosts(postState.posts);
-        }
-    }, [postState.posts])
 
-    if (postState.loading) {
+    if (loading) {
         return (
             <div className={`flex items-center justify-center w-full h-full bg-slate-600`}><Loading /></div>
         )
     }
 
     return (
-
         <>
             <div className='fixed top-[60px] bg-slate-700 z-8 rounded-md p-2 mt-1 z-10'>
                 <span className='pr-2'>

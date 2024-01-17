@@ -19,6 +19,8 @@ export function decodeS3Key(key) {
 }
 
 export function calculateDistance(p1, p2) {
+    // return infinity if either point is null
+    if (!p1 || !p2) return Infinity;
     const { latitude: lat1, longitude: lon1 } = p1;
     const { latitude: lat2, longitude: lon2 } = p2;
 
@@ -34,6 +36,21 @@ export function calculateDistance(p1, p2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c; // Distance in meters
+}
+
+export async function getNearbyPosts({latitude, longitude}) {
+    let posts = [];
+    try {
+        posts = await fetch('/api/posts', {
+            method: 'POST',
+            body: JSON.stringify({ nearby: true, latitude, longitude }),
+        });
+        posts = await posts.json();
+    } catch (error) {
+        console.error('fetching posts failed', error);
+        posts = [];
+    }
+    return posts;
 }
 
 export const BUCKET_URL = 'https://mimms-pictures.s3.amazonaws.com/'
