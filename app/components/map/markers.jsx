@@ -1,19 +1,16 @@
-import { useState, useEffect, useContext } from 'react'
 import { encodeS3Key, BUCKET_URL } from '@/app/utils/main'
 import PopupMarker from './popupMarker'
-import { PostsContext } from '@/app/providers/postsProvider'
-
+import { useLocationAndPosts } from '../../providers/locationAndPosts';
 
 export default function Markers() {
-    const { postState, dispatch } = useContext(PostsContext);
-
-    if (postState.posts.length === 0) {
+    const { posts } = useLocationAndPosts();
+    if (posts.length === 0) {
         return null
     }
 
     return (
         <>
-            {postState.posts.map((post) => {
+            {posts.map((post) => {
                 if (!post.latitude || !post.longitude) return null;
                 return (
                     <PopupMarker

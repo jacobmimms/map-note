@@ -47,7 +47,6 @@ export const PostsProvider = ({ children }) => {
             localStorage.setItem('posts', JSON.stringify({}));
             return
         }
-        console.log('saved posts', savedPosts)
         if (savedPosts) {
             dispatch({ type: 'SET_POSTS', payload: JSON.parse(savedPosts) });
         }

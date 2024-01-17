@@ -1,10 +1,10 @@
 'use client'
 import { Marker } from 'react-leaflet'
-import { useMemo, useContext } from 'react';
-import { LocationContext } from '@/app/providers/locationProvider';
+import { useMemo } from 'react';
+import { useLocationAndPosts } from '../../providers/locationAndPosts';
 
 export default function LocationMarker() {
-    const position = useContext(LocationContext);
+    const { location } = useLocationAndPosts();
     const icon = useMemo(() => L.icon({
         iconUrl: './location.png',
         iconSize: [15, 15],
@@ -12,7 +12,7 @@ export default function LocationMarker() {
 
     return (
         <>
-            <Marker position={[position.latitude, position.longitude]} icon={icon} zIndexOffset={100} >
+            <Marker position={[location.latitude, location.longitude]} icon={icon} zIndexOffset={100} >
             </Marker>
         </>
 

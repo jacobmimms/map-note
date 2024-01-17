@@ -1,19 +1,22 @@
-'use client'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-export default function NavLink(props) {
-    const pathname = usePathname()
-    const isActive = pathname.startsWith(props.href) && props.href.startsWith(pathname)
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-    let className = isActive ? `rounded-t-xl bg-slate-800 text-slate-100 border-stone-500 h-[80%] nav-link-active` : `h-full text-slate-200`
-    return (
-        <div className='nav-link flex flex-row items-end w-full h-full'>
-            <Link {...props} className={`${className} ${props.className} w-full relative`}>
-                <div className='flex flex-row justify-center items-center w-full h-full'>
-                    {props.children}
-                </div>
-            </Link>
-        </div>
+export default function NavLink({ href, className, children }) {
+  console.count("NavLink");
 
-    )
+  const pathname = usePathname();
+  const isActive = pathname.startsWith(href) && href.startsWith(pathname);
+
+  let activeClassName = isActive
+    ? `rounded-t-xl bg-slate-800 text-slate-100 border-stone-500 h-[80%] nav-link-active`
+    : `h-full text-slate-200`;
+  return (
+    <Link
+      href={href}
+      className={`${activeClassName} ${className} nav-link flex flex-row items-center justify-center w-full h-full relative`}
+    >
+      {children}
+    </Link>
+  );
 }

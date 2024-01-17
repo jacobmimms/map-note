@@ -11,9 +11,8 @@ import LocateMe from './locateMe'
 function Map() {
     const mapRef = useRef(null);
     const savedLocation = localStorage.getItem('lastLocation');
-    const [position, setPosition] = useState(
-        savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
-    );
+    const position = savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
+
 
     const params = useSearchParams();
     const latitude = params.get('latitude');
@@ -38,7 +37,6 @@ function Map() {
             if (!latitude && !longitude) {
                 mapRef.current.setView(e.latlng, 14);
             }
-            setPosition({ latitude: e.latitude, longitude: e.longitude });
         });
         e.target.on('locationerror', (e) => {
             console.error('error in handle ready', e);

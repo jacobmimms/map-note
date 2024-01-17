@@ -125,3 +125,7 @@
   border-radius: 0% 0% 0% 100%;
   box-shadow: -2px 2px 0px 2px rgb(30, 41, 59);
 }
+
+.shadow-bottom-left {
+  box-shadow: -4px 6px 10px 5px rgba(0, 0, 0, 0.1);
+}
