@@ -13,68 +13,65 @@ export async function GET(request) {
   }
 }
 
-async function getPostsOrderedByProximity(latitude, longitude) {
-  const result = await prisma.$queryRaw`
-      SELECT *, earth_distance(
-        ll_to_earth(${latitude}, ${longitude}),
-        ll_to_earth("latitude", "longitude")
-      ) as distance
-      FROM "posts"
-      ORDER BY distance ASC
-    `;
-  return result;
+async function getUserPosts(session) {
+  return prisma.post.findMany({
+    where: {
+      authorId: session.id,
+    },
+  });
 }
 
-async function getPostsInBounds(bounds) {
-  console.log(bounds);
-  const posts = await prisma.post.findMany({
-    where: {
-      latitude: {
-        gte: bounds._southWest.lat,
-        lte: bounds._northEast.lat,
-      },
-      longitude: {
-        gte: bounds._southWest.lng,
-        lte: bounds._northEast.lng,
+async function getNearbyPosts(location) {
+  const posts = await prisma.$queryRaw`
+  SELECT *, earth_distance(
+    ll_to_earth(${location.latitude}, ${location.longitude}),
+    ll_to_earth("latitude", "longitude")
+  ) as distance
+  FROM "posts"
+  ORDER BY distance ASC
+`;
+  return NextResponse.json(posts);
+}
+
+async function uploadPost(post, request) {
+  const { id, content, location, tags } = post;
+  const userId = await getUserId(request);
+  if (!userId) {
+    return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL);
+  }
+  const result = await prisma.post.create({
+    data: {
+      title: id,
+      authorId: userId,
+      content: content,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      tags: {
+        create: tags.map((tag) => ({ name: tag })),
       },
     },
   });
-  return posts;
+  return NextResponse.json(result);
+}
+
+async function getUserId(request) {
+  const session = await getServerSession({ req: request, ...authOptions });
+  if (!session) {
+    return null;
+  }
+  const userId = session?.user?.id;
+  return userId;
 }
 
 export async function POST(request) {
   try {
-    const { title, content, latitude, longitude, nearby } =
-      await request.json();
+    const { post, nearby } = await request.json();
     if (nearby) {
-      console.log("nearby", latitude, longitude);
-      const posts = await getPostsOrderedByProximity(latitude, longitude);
-      console.log(posts);
-      return NextResponse.json(posts);
+      return await getNearbyPosts(nearby.location);
     }
-    const session = await getServerSession({ req: request, ...authOptions });
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    if (!session) {
-      return NextResponse.redirect(`${baseUrl}`);
+    if (post) {
+      return await uploadPost(post, request);
     }
-    // get user id from database
-    const user = await prisma.user.findUnique({
-      where: {
-        email: session.user.email,
-      },
-    });
-    const userId = user.id;
-
-    const result = await prisma.post.create({
-      data: {
-        authorId: userId,
-        title: title,
-        content: content,
-        latitude: latitude,
-        longitude: longitude,
-      },
-    });
-    return NextResponse.json(result);
   } catch (error) {
     console.error(error);
     return NextResponse.error(error);

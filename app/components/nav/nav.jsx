@@ -2,6 +2,7 @@ import NavLink from "./navLink";
 import UserNav from "./userNav";
 
 export default function Nav() {
+  console.count("Nav");
   return (
     <div className="ml-1 select-none flex flex-row items-end h-full w-full">
       <NavLink

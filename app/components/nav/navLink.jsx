@@ -3,8 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function NavLink({ href, className, children }) {
-  console.count("NavLink");
-
   const pathname = usePathname();
   const isActive = pathname.startsWith(href) && href.startsWith(pathname);
 

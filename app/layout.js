@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Noto_Sans } from "next/font/google";
 import { LocationAndPostsProvider } from "@/app/providers/locationAndPosts";
+import { MapProvider } from "@/app/providers/mapProvider";
 import Header from "./components/header";
 import { SessionProvider } from "@/app/providers/sessionProvider";
 import { authOptions } from "@/lib/auth";
@@ -28,14 +29,15 @@ export default async function RootLayout({ children }) {
       <SessionProvider session={session}>
         <body className="flex flex-col w-full h-full overflow-x-hidden">
           <Header />
-
-          <LocationAndPostsProvider>
-            <div className="bg-slate-800 h-full w-full overflow-y-hidden">
-              <main className="h-[calc(100%-16px)] overflow-scroll bg-transparent rounded-lg m-2">
-                {children}
-              </main>
-            </div>
-          </LocationAndPostsProvider>
+          <MapProvider>
+            <LocationAndPostsProvider>
+              <div className="bg-slate-800 h-full w-full overflow-y-hidden">
+                <main className="h-[calc(100%-16px)] overflow-scroll bg-transparent rounded-md m-2">
+                  {children}
+                </main>
+              </div>
+            </LocationAndPostsProvider>
+          </MapProvider>
         </body>
       </SessionProvider>
     </html>

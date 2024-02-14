@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faRulerHorizontal } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Loading from "@/app/components/animations/loading";
 import { useLocationAndPosts } from "@/app/providers/locationAndPosts";
 
@@ -74,6 +75,21 @@ export default function Page({ params }) {
                 </div>
               </div>
             )}
+            <div className="group">
+              <div
+                className="flex flex-row items-center justify-center bg-red-500 hover:bg-red-400 text-black rounded-md border-slate-700 border-2 p-1  hover:cursor-pointer"
+                onClick={async () => {
+                  const response = await fetch(`/api/posts/${post.id}`, {
+                    method: "DELETE",
+                  });
+                  if (response.ok) {
+                    console.log("Post deleted");
+                  }
+                }}
+              >
+                <FontAwesomeIcon icon={faTrash} className="h-6 w-6" />
+              </div>
+            </div>
           </div>
 
           <div className="w-full h-full bg-slate-800  m-2 p-2 rounded-md">

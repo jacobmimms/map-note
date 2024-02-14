@@ -11,7 +11,7 @@ import Link from "next/link";
 function DropdownMenu({ children, className }) {
   return (
     <div
-      className={`absolute rounded-l-xl px-2 py-2 bg-slate-800 border-slate-700 border-y-4 border-x-4 w-[300%] sm:w-[100%] transition-transform duration-300 ${className} shadow-bottom-left shadow-md`}
+      className={`absolute rounded-bl-xl px-2 py-2 bg-slate-800 border-slate-800 border-y-4 border-x-4 w-[300%] sm:w-[100%] transition-transform duration-300 ${className} shadow-bottom-left shadow-md`}
     >
       {children}
     </div>
@@ -86,7 +86,7 @@ export default function UserNav({ className }) {
         </div>
       ) : (
         <button className="w-full h-full" onClick={() => setToggle(!toggle)}>
-          <div className="flex flex-col h-[60%] justify-center items-center rounded-xl bg-slate-800 mx-4">
+          <div className="text-white flex flex-col h-[80%] flex-grow justify-center items-center rounded-xl bg-slate-800 ml-2 mr-3">
             Sign in
           </div>
         </button>
