@@ -1,13 +1,12 @@
 "use client";
 import { useLocationAndPosts } from "@/app/providers/locationAndPosts";
-import Loading from "@/app/components/animations/loading";
 import { useMapContext } from "@/app/providers/mapProvider";
 import PostCard from "@/app/components/postCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import TagInput from "@/app/components/tagInput";
 
 function Post({ post }) {
   const { mapRef } = useMapContext();
-  console.log(mapRef);
 
   function locatePost(latitude, longitude) {
     mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
@@ -29,46 +28,40 @@ function Post({ post }) {
 
 export default function PostList() {
   const { posts } = useLocationAndPosts();
-  const [selectedCategory, setSelectedCategory] = useState({
-    all: true,
-    food: false,
-    drink: false,
-    fun: false,
-    chill: false,
-  });
+  const [tags, setTags] = useState({});
+  const [filteredPosts, setFilteredPosts] = useState(posts);
 
-  if (posts.length === 0) {
-    return <Loading className={`absolute -inset-0 m-auto h-20 w-20`} />;
-  }
-
-  function SelectButton({ name, isSelected }) {
-    return (
-      <button
-        onClick={() =>
-          setSelectedCategory({ ...selectedCategory, [name]: !isSelected })
-        }
-        className={
-          `bg-slate-500 text-white rounded-md p-2 ${
-            isSelected ? "bg-slate-700" : ""
-          }` + " w-[60px]"
-        }
-      >
-        {name}
-      </button>
-    );
-  }
+  useEffect(() => {
+    let searchTags = Object.keys(tags).filter((tag) => tags[tag]);
+    console.log(searchTags);
+    if (searchTags.length === 0) {
+      setFilteredPosts(posts);
+      return;
+    }
+    let newPosts = posts.filter((post) => {
+      console.log(post);
+      let postTags = post.tags;
+      if (!postTags || postTags.length === 0) {
+        return false;
+      }
+      let postTagNames = postTags.map((tag) => tag.name);
+      let foundTags = postTagNames.filter((tag) => searchTags.includes(tag));
+      return foundTags.length > 0;
+    });
+    setFilteredPosts(newPosts);
+  }, [tags, posts]);
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <ul className="flex flex-row justify-around">
-        <SelectButton name="all" isSelected={selectedCategory.all} />
-        <SelectButton name="food" isSelected={selectedCategory.food} />
-        <SelectButton name="drink" isSelected={selectedCategory.drink} />
-        <SelectButton name="fun" isSelected={selectedCategory.fun} />
-        <SelectButton name="chill" isSelected={selectedCategory.chill} />
-      </ul>
-      <ul className="w-full">
-        {posts.map((post) => (
+    <div className="flex flex-col items-center w-full h-full bg-stone-200 rounded-md shadow-black shadow-inner">
+      <TagInput
+        className={`w-full`}
+        tags={tags}
+        setTags={setTags}
+        placeholder={"Search with tags!"}
+        triggerErrorMessage={(error) => console.error(error)}
+      />
+      <ul className="w-full overflow-y-scroll">
+        {filteredPosts.map((post) => (
           <li key={post.id}>
             <Post post={post} />
           </li>

@@ -12,7 +12,7 @@ function ExploreMap({ toggledHeight, toggledWidth, toggleCb }) {
   const [icon, setIcon] = useState(faMaximize);
   const { mapRef } = useMapContext();
   const savedLocation = localStorage.getItem("lastLocation");
-  const mapPosition = useRef(
+  let mapPosition = useRef(
     savedLocation ? JSON.parse(savedLocation) : { latitude: 0, longitude: 0 }
   );
 

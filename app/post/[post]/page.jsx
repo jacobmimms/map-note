@@ -14,7 +14,6 @@ export default function Page({ params }) {
   const post_name = decodeURIComponent(params.post).replace(/\+/g, " ");
   const { posts } = useLocationAndPosts();
   const post = posts.find((post) => post.title === post_name);
-  console.log(post);
   if (!post) {
     return (
       <div

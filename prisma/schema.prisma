@@ -4,33 +4,24 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Post {
   id        String   @id @default(cuid())
-  title     String?
+  title     String
   content   String?
   published Boolean  @default(false)
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   latitude  Float?
   longitude Float?
-  author    User?    @relation(fields: [authorId], references: [id])
   authorId  String?  @map("author_id")
-  groups    Group[]
-  tags      Tags[]
+  author    User?    @relation(fields: [authorId], references: [id])
+  groups    Group[]  @relation("GroupToPost")
 
-  @@map(name: "posts")
-}
-
-model Tags {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-  posts     Post[]
+  @@map("posts")
 }
 
 model User {
@@ -43,24 +34,24 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  OwnerGroups   Group[]   @relation("Owner")
   posts         Post[]
   groups        Group[]   @relation("GroupMembers")
-  OwnerGroups   Group[]   @relation("Owner")
 
-  @@map(name: "users")
+  @@map("users")
 }
 
 model Group {
   id        String   @id @default(cuid())
   name      String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   ownerId   String
   owner     User     @relation("Owner", fields: [ownerId], references: [id])
   members   User[]   @relation("GroupMembers")
-  posts     Post[]
+  posts     Post[]   @relation("GroupToPost")
 
-  @@map(name: "groups")
+  @@map("groups")
 }
 
 model Account {
@@ -69,12 +60,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 

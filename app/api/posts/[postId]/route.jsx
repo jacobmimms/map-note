@@ -14,7 +14,6 @@ async function getUserId(request) {
 
 async function deletePost(postId, request) {
   const userId = await getUserId(request);
-  console.log("userId", userId);
   if (!userId) {
     return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL);
   }
@@ -23,7 +22,6 @@ async function deletePost(postId, request) {
       id: postId,
     },
   });
-  console.log(post);
   if (post.authorId !== userId) {
     return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL);
   }

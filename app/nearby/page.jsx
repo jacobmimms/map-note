@@ -29,8 +29,8 @@ function Nearby() {
   }
 
   return (
-    <>
-      <div className="fixed top-[60px] bg-slate-700 z-8 rounded-md p-2 mt-1 z-10">
+    <div className="relative">
+      <div className="absolute top-0 bg-slate-700 z-8 rounded-md p-2 z-10">
         <span className="pr-2">sort by:</span>
         <select
           className="bg-slate-700 text-slate-300 h-full text-center"
@@ -41,14 +41,14 @@ function Nearby() {
         </select>
       </div>
 
-      <section className="w-full flex flex-col bg-slate-800 rounded-md z-0 mt-1">
-        <div className="pt-[40px] w-full flex flex-row min-h-full flex-wrap  overflow-scroll justify-center gap-1">
+      <section className="w-full pt-5 flex flex-col bg-slate-800 rounded-md z-0">
+        <div className="w-full flex flex-row min-h-full flex-wrap  overflow-scroll justify-center gap-1">
           {memoSort.map((post) => (
-            <PostCard key={post.id} post={post} size={`h-[160px] w-[160px]`} />
+            <PostCard key={post.id} post={post} size={`h-28 w-28`} />
           ))}
         </div>
       </section>
-    </>
+    </div>
   );
 }
 

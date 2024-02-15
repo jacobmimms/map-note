@@ -22,14 +22,21 @@ async function getUserPosts(session) {
 }
 
 async function getNearbyPosts(location) {
-  const posts = await prisma.$queryRaw`
-  SELECT *, earth_distance(
-    ll_to_earth(${location.latitude}, ${location.longitude}),
-    ll_to_earth("latitude", "longitude")
-  ) as distance
-  FROM "posts"
-  ORDER BY distance ASC
-`;
+  //   const posts = await prisma.$queryRaw`
+  //   SELECT *, earth_distance(
+  //     ll_to_earth(${location.latitude}, ${location.longitude}),
+  //     ll_to_earth("latitude", "longitude")
+  //   ) as distance
+  //   FROM "posts"
+  //   ORDER BY distance ASC
+  // `;
+
+  // just get all posts and include tags
+  const posts = await prisma.post.findMany({
+    include: {
+      tags: true,
+    },
+  });
   return NextResponse.json(posts);
 }
 
@@ -70,7 +77,6 @@ export async function POST(request) {
       return await getNearbyPosts(nearby.location);
     }
     if (post) {
-      console.log(post, "post");
       return await uploadPost(post, request);
     }
   } catch (error) {

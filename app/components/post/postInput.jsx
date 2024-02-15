@@ -10,7 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocationAndPosts } from "@/app/providers/locationAndPosts";
 import IconButton from "@/app/components/iconButton";
-import TagInput from "./tagInput";
+import TagInput from "@/app/components/tagInput";
+import ErrorMessage from "@/app/components/errorMessage";
 
 function ImagePreview({ file, height, width }) {
   if (!file) {
@@ -30,17 +31,14 @@ function ImagePreview({ file, height, width }) {
   );
 }
 
-function ErrorMessage({ error }) {
-  return (
-    <div
-      className={`absolute flex items-center justify-center w-2/5 h-2/5 rounded-lg bg-opacity-60 inset-0 m-auto ${error.color} z-10 text-white drop-shadow-md`}
-    >
-      <span className="text-2xl text-center">{error.message}</span>
-    </div>
-  );
-}
-
-async function uploadToPostgres(id, text, tags, location, triggerErrorMessage) {
+async function uploadToPostgres(
+  id,
+  text,
+  tags,
+  location,
+  triggerErrorMessage,
+  dispatch
+) {
   const post = { post: { id, text, location, tags } };
   let postResponse;
   try {
@@ -57,36 +55,39 @@ async function uploadToPostgres(id, text, tags, location, triggerErrorMessage) {
       message: "Error in Upload API",
       color: "bg-red-500",
     });
+    return;
   }
 
-  if (postResponse?.ok) {
-    if (postResponse.redirected) {
-      triggerErrorMessage({
-        message: "Post upload error - redirected",
-        color: "bg-red-500",
-      });
-    } else {
-      triggerErrorMessage({
-        message: "Post uploaded successfully",
-        color: "bg-green-500",
-      });
-    }
-  } else {
+  if (!postResponse?.ok) {
     triggerErrorMessage({
       message: "Post upload error - response not ok",
       color: "bg-red-500",
     });
+    return;
   }
+  if (postResponse.redirected) {
+    triggerErrorMessage({
+      message: "Post upload error - redirected",
+      color: "bg-red-500",
+    });
+    return;
+  }
+
+  triggerErrorMessage({
+    message: "Post uploaded successfully",
+    color: "bg-green-500",
+  });
+  dispatch({ type: "RELOAD_POSTS" });
 }
 
 export default function PostInput() {
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState({});
   const [error, setError] = useState({ message: "", color: "" });
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { location, posts } = useLocationAndPosts();
+  const { location, posts, dispatch } = useLocationAndPosts();
   const checkSetFile = (file) => {
     if (file.size > 2000000) {
       triggerErrorMessage({
@@ -122,7 +123,6 @@ export default function PostInput() {
     setLoading(true);
     try {
       const id = `${Date.now()}${file.name}`;
-      console.log(id, "id", file.type, "file type", file);
       const response = await fetch("/api/upload", {
         method: "POST",
         headers: {
@@ -154,7 +154,14 @@ export default function PostInput() {
           });
           return;
         }
-        uploadToPostgres(id, text, tags, location, triggerErrorMessage);
+        uploadToPostgres(
+          id,
+          text,
+          Object.keys(tags).filter((tag) => tags[tag]),
+          location,
+          triggerErrorMessage,
+          dispatch
+        );
       } else {
         triggerErrorMessage({
           message: "Failed to get pre-signed URL for S3",

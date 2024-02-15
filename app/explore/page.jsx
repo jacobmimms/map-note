@@ -4,6 +4,7 @@ import PostInput from "../components/post/postInput";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import PostList from "./postList";
+import { useMapContext } from "@/app/providers/mapProvider";
 
 const ExploreMap = dynamic(() => import("../components/map/exploreMap"), {
   ssr: false,
@@ -88,9 +89,18 @@ function ExplorePage() {
   const [toggle, setToggle] = useState(false);
   const latitude = params.get("latitude");
   const longitude = params.get("longitude");
+  const { mapRef } = useMapContext();
+
+  useEffect(() => {
+    function locatePost(latitude, longitude) {
+      mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
+    }
+    if (latitude && longitude) {
+      locatePost(latitude, longitude);
+    }
+  }, [latitude, longitude, mapRef]);
 
   function toggleCb(toggleFunc) {
-    console.log("toggling");
     const interfaceElement = document.getElementById("interface");
     interfaceElement.classList.toggle("opacity-100");
     interfaceElement.classList.toggle("opacity-0");
