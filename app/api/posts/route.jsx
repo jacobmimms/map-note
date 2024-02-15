@@ -70,6 +70,7 @@ export async function POST(request) {
       return await getNearbyPosts(nearby.location);
     }
     if (post) {
+      console.log(post, "post");
       return await uploadPost(post, request);
     }
   } catch (error) {

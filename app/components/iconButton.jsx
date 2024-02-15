@@ -9,7 +9,6 @@ export default function ToggleButton({
 }) {
   backgroundColor = backgroundColor || "bg-slate-800";
   size = `h-${size} w-${size}` || "h-12 w-12";
-  console.log(noButton);
   if (noButton) {
     return (
       <div

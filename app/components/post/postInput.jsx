@@ -62,7 +62,7 @@ async function uploadToPostgres(id, text, tags, location, triggerErrorMessage) {
   if (postResponse?.ok) {
     if (postResponse.redirected) {
       triggerErrorMessage({
-        message: "Post upload error",
+        message: "Post upload error - redirected",
         color: "bg-red-500",
       });
     } else {
@@ -72,8 +72,10 @@ async function uploadToPostgres(id, text, tags, location, triggerErrorMessage) {
       });
     }
   } else {
-    console.error("Post upload error:", postResponse);
-    triggerErrorMessage({ message: "Post upload error", color: "bg-red-500" });
+    triggerErrorMessage({
+      message: "Post upload error - response not ok",
+      color: "bg-red-500",
+    });
   }
 }
 
