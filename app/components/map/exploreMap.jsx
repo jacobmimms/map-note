@@ -53,7 +53,7 @@ function ExploreMap({ toggledHeight, toggledWidth, toggleCb }) {
       <FontAwesomeIcon
         onClick={() => toggleCb(toggleSize)()}
         icon={icon}
-        className="absolute top-2 left-2 z-20 w-6 h-6 rounded-full p-2 bg-slate-800 hover:cursor-pointer"
+        className="absolute bottom-2 right-2 z-20 w-6 h-6 rounded-full p-2 bg-slate-800 hover:cursor-pointer"
       />
     </div>
   );

@@ -40,7 +40,7 @@ export default function BaseMap({ children, position, ...props }) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {children}
-      <ZoomControl position="bottomright" />
+      <ZoomControl position="topright" />
     </MapContainer>
   );
 }

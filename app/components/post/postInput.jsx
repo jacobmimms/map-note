@@ -33,9 +33,9 @@ function ImagePreview({ file, height, width }) {
 function ErrorMessage({ error }) {
   return (
     <div
-      className={`absolute flex items-center justify-center w-4/5 h-4/5 rounded-lg bg-opacity-60 inset-0 m-auto ${error.color} z-10 text-white drop-shadow-md`}
+      className={`absolute flex items-center justify-center w-2/5 h-2/5 rounded-lg bg-opacity-60 inset-0 m-auto ${error.color} z-10 text-white drop-shadow-md`}
     >
-      <span className="text-2xl">{error.message}</span>
+      <span className="text-2xl text-center">{error.message}</span>
     </div>
   );
 }
@@ -81,7 +81,6 @@ export default function PostInput() {
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
   const [tags, setTags] = useState([]);
-  const [currentTag, setCurrentTag] = useState("");
   const [error, setError] = useState({ message: "", color: "" });
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -168,7 +167,7 @@ export default function PostInput() {
   }
 
   return (
-    <div className="w-full flex flex-row  items-start bg-slate-600 rounded-md p-2 shadow-inner shadow-black ">
+    <div className="w-full h-full flex flex-row  items-start bg-slate-800 rounded-md ">
       {showError && <ErrorMessage error={error} />}
 
       <form
@@ -191,31 +190,30 @@ export default function PostInput() {
           setTags={setTags}
           triggerErrorMessage={triggerErrorMessage}
         />
-        <div className="flex flex-row items-center justify-around shadow-inner shadow-slate-800 rounded-md p-2">
-          <label htmlFor="file">
-            {file ? (
-              <ImagePreview file={file} height={"h-16"} width={"w-16"} />
-            ) : (
-              <IconButton size={8} icon={faCamera} />
-            )}
-          </label>
-          <IconButton size={8} icon={faTag} />
-          <IconButton
-            size={8}
-            type="submit"
-            disabled={showError}
-            icon={faUpload}
-          />
-        </div>
-
         <input
           type="file"
           name="file"
           id="file"
           className="hidden"
           accept="image/*"
+          capture="camera"
           onChange={(e) => checkSetFile(e.target.files[0])}
         />
+        <div className="flex flex-row items-center justify-around shadow-inner shadow-slate-800 rounded-md">
+          <label htmlFor="file" type="button">
+            {file ? (
+              <ImagePreview file={file} height={"h-8"} width={"w-8"} />
+            ) : (
+              <IconButton size={12} icon={faCamera} noButton={true} />
+            )}
+          </label>
+          <IconButton
+            size={12}
+            type="submit"
+            disabled={showError}
+            icon={faUpload}
+          />
+        </div>
       </form>
     </div>
   );
