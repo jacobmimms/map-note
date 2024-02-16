@@ -49,7 +49,7 @@ async function uploadPost(post, request) {
   const result = await prisma.post.create({
     data: {
       title: id,
-      authorId: userId,
+      author: { connect: { id: userId } },
       content: content,
       latitude: location.latitude,
       longitude: location.longitude,

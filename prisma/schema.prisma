@@ -17,7 +17,7 @@ model Post {
   updatedAt DateTime @updatedAt @map("updated_at")
   latitude  Float?
   longitude Float?
-  authorId  String?  @map("author_id")
+  authorId  String?
   author    User?    @relation(fields: [authorId], references: [id])
   groups    Group[]  @relation("GroupToPost")
 
